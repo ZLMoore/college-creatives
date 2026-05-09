@@ -17,13 +17,14 @@ export async function POST(request: Request) {
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" /></head>
-<body style="margin:0;background:#F7F4EF;font-family:'DM Sans',sans-serif;color:#12172A;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F7F4EF;padding:32px 16px;">
+<body style="margin:0;background:#FFFFFF;font-family:'DM Sans',sans-serif;color:#12172A;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;padding:32px 16px;">
     <tr><td align="center">
       <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border-radius:12px;overflow:hidden;box-shadow:0 24px 60px rgba(18,23,42,0.12);">
         <tr>
-          <td style="background:#12172A;padding:28px 32px;">
-            <p style="margin:0;font-family:Georgia,serif;font-size:22px;color:#FFFFFF;">College <span style="color:#F5A623;">Creatives</span></p>
+          <td style="background:#12172A;padding:28px 32px;display:flex;align-items:center;gap:12px;">
+            <img src="https://collegecreatives.store/images/CC_logo.png" alt="College Creatives logo" style="height:36px;width:auto;display:inline-block;vertical-align:middle;margin-right:12px;" />
+            <p style="margin:0;display:inline-block;font-family:Georgia,serif;font-size:22px;color:#FFFFFF;vertical-align:middle;">College <span style="color:#F5A623;">Creatives</span></p>
           </td>
         </tr>
         <tr>
