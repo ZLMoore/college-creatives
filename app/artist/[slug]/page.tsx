@@ -53,16 +53,16 @@ export default function ArtistProfilePage() {
   }, [slug]);
 
   const artist = payload?.artist;
-  const rawArtworks = payload?.artworks ?? [];
   const artworks = useMemo(() => {
+    const source = payload?.artworks ?? [];
     const seen = new Set<string>();
-    return rawArtworks.filter((row) => {
+    return source.filter((row) => {
       const key = `${row.title}::${row.image_url}::${row.artist_id}`;
       if (seen.has(key)) return false;
       seen.add(key);
       return true;
     });
-  }, [rawArtworks]);
+  }, [payload?.artworks]);
   console.log("artworks count:", artworks.length);
 
   if (missing) {

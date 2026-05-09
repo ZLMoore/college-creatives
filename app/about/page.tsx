@@ -114,7 +114,7 @@ export default function MissionPage() {
           </p>
           <p style={{ margin: "0 0 1.5rem", fontSize: 18, lineHeight: 1.9, color: "var(--page-text)" }}>
             Artists apply using a verified .edu email and undergo a review process before joining the platform. Once
-            approved, they upload their work, set their prices, and fulfill orders through Printful's print-on-demand
+            approved, they upload their work, set their prices, and fulfill orders through Printful&apos;s print-on-demand
             infrastructure, with direct payouts through Stripe.
           </p>
         </section>
