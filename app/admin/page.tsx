@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { AdminApproveButton } from "@/components/admin-approve-button";
+import { AdminCreateArtworkForm } from "@/components/admin-create-artwork-form";
 import { AdminLoginForm } from "@/components/admin-login-form";
 import { SeedDemoPanel } from "@/components/seed-demo-panel";
 import { SiteHeader } from "@/components/site-header";
@@ -18,13 +19,18 @@ export default async function AdminPage() {
     );
   }
 
-  const [{ data: pendingArtists }, { data: artworks }, { data: orders }] =
+  const [{ data: pendingArtists }, { data: approvedArtists }, { data: artworks }, { data: orders }] =
     await Promise.all([
       supabaseAdmin
         .from("artists")
         .select("*")
         .eq("status", "pending")
         .order("created_at", { ascending: false }),
+      supabaseAdmin
+        .from("artists")
+        .select("id, name")
+        .eq("status", "approved")
+        .order("name", { ascending: true }),
       supabaseAdmin
         .from("artworks")
         .select("*, artist:artists(name)")
@@ -64,11 +70,24 @@ export default async function AdminPage() {
         </section>
 
         <section className="bg-white p-6 shadow-[0_22px_60px_rgba(0,0,0,0.18)]">
+          <h2 className="font-serif text-3xl text-navy">Add artwork</h2>
+          <p className="mt-2 max-w-2xl text-sm text-navy/70">
+            Create a listing for an approved artist. Medium must match the homepage filter list.
+          </p>
+          <AdminCreateArtworkForm
+            artists={(approvedArtists ?? []).map((a) => ({ id: a.id, name: a.name }))}
+          />
+        </section>
+
+        <section className="bg-white p-6 shadow-[0_22px_60px_rgba(0,0,0,0.18)]">
           <h2 className="font-serif text-3xl text-navy">Artworks</h2>
           <div className="mt-5 space-y-2">
             {artworks?.map((artwork) => (
               <p key={artwork.id} className="rounded-lg border border-navy/10 px-4 py-3 text-sm">
                 {artwork.title} by {artwork.artist?.name ?? "Unknown"} - {artwork.status}
+                {artwork.medium != null && String(artwork.medium).trim() !== ""
+                  ? ` · ${artwork.medium}`
+                  : ""}
               </p>
             ))}
           </div>

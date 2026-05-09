@@ -32,6 +32,26 @@ export const SiteHeader = () => (
       boxSizing: "border-box",
     }}
   >
+    <style>{`
+      .cc-header-apply-btn {
+        background: #f5a623;
+        color: #12172a;
+        padding: 8px 22px;
+        border-radius: 40px;
+        font-size: 12px;
+        font-weight: 500;
+        font-family: "DM Sans", sans-serif;
+        text-decoration: none;
+        z-index: 1;
+        white-space: nowrap;
+        display: inline-block;
+        transition: background 0.2s ease, color 0.2s ease;
+      }
+      .cc-header-apply-btn:hover {
+        background: #3bafd4;
+        color: #fff;
+      }
+    `}</style>
     <nav
       style={{
         position: "relative",
@@ -73,6 +93,9 @@ export const SiteHeader = () => (
       </Link>
 
       <div style={{ ...centeredLinksStyle, pointerEvents: "none" }}>
+        <Link href="/" style={{ ...linkStyle, pointerEvents: "auto" }}>
+          Home
+        </Link>
         <Link href="/about" style={{ ...linkStyle, pointerEvents: "auto" }}>
           About
         </Link>
@@ -84,21 +107,7 @@ export const SiteHeader = () => (
         </Link>
       </div>
 
-      <Link
-        href="/apply"
-        style={{
-          background: "#F5A623",
-          color: "#12172A",
-          padding: "8px 22px",
-          borderRadius: "40px",
-          fontSize: "12px",
-          fontWeight: 500,
-          fontFamily: '"DM Sans", sans-serif',
-          textDecoration: "none",
-          zIndex: 1,
-          whiteSpace: "nowrap",
-        }}
-      >
+      <Link href="/apply" className="cc-header-apply-btn">
         Apply to Sell
       </Link>
     </nav>

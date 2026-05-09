@@ -2,6 +2,7 @@
 
 import { type FormEvent, useEffect, useMemo, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
+import { MEDIUM_OPTIONS, type MediumOption } from "@/lib/medium-options";
 const HERO_BG_GRADIENT =
   "linear-gradient(to bottom, rgba(10,12,22,0.38) 0%, rgba(10,12,22,0.52) 40%, rgba(10,12,22,0.72) 100%)";
 
@@ -12,95 +13,59 @@ function heroImageFor(isDark: boolean, isWinter: boolean): string {
   return isDark ? "/images/night_college.png" : "/images/sunset_college.png";
 }
 
-type Artwork = { title: string; src: string; price: number };
-type Artist = {
+type GalleryArtwork = { id: string; title: string; src: string; price: number; medium: string | null };
+type GalleryArtist = {
   id: string;
   slug: string;
   name: string;
   school: string;
   major: string;
-  filter: "painting" | "print" | "abstract";
   medium: string;
-  city: string;
   bio: string;
   tagBg: string;
   tagTxt: string;
   sales: number;
-  artworks: Artwork[];
+  artworks: GalleryArtwork[];
 };
 
-const artists: Artist[] = [
-  {
-    id: "vincent-van-gogh",
-    slug: "vincent-van-gogh",
-    name: "Vincent van Gogh",
-    school: "Royal Academy of Arts",
-    major: "Fine Arts",
-    filter: "painting",
-    medium: "Post-impressionism",
-    city: "Arles, FR",
-    bio: "Vincent's swirling post-impressionist canvases channel raw emotion through bold brushwork and electric color.",
-    tagBg: "#3BAFD4",
-    tagTxt: "#fff",
-    sales: 218,
-    artworks: [
-      { title: "Starry Night Over the Rhône", src: "/images/starry-rhone.jpg", price: 44 },
-      { title: "The Starry Night", src: "/images/starry-night.jpg", price: 52 },
-      { title: "Self-Portrait with Palette", src: "/images/vangogh-self.jpg", price: 38 },
-    ],
-  },
-  {
-    id: "leonardo-da-vinci",
-    slug: "leonardo-da-vinci",
-    name: "Leonardo da Vinci",
-    school: "Florentine Academy",
-    major: "Renaissance Art",
-    filter: "painting",
-    medium: "Renaissance",
-    city: "Florence, IT",
-    bio: "Leonardo's mastery of sfumato produced works that transcend time. His portraits carry a quiet intensity.",
-    tagBg: "#F5A623",
-    tagTxt: "#12172A",
-    sales: 142,
-    artworks: [
-      { title: "Mona Lisa", src: "/images/mona-lisa.jpg", price: 56 },
-      { title: "Creation of Adam", src: "/images/creation.jpg", price: 48 },
-    ],
-  },
-  {
-    id: "katsushika-hokusai",
-    slug: "katsushika-hokusai",
-    name: "Katsushika Hokusai",
-    school: "Kano School of Art",
-    major: "Ukiyo-e Printmaking",
-    filter: "print",
-    medium: "Ukiyo-e",
-    city: "Edo, JP",
-    bio: "Hokusai's woodblock prints defined an era with bold lines and an eye for the sublime in nature.",
-    tagBg: "#E8503A",
-    tagTxt: "#fff",
-    sales: 97,
-    artworks: [{ title: "The Great Wave off Kanagawa", src: "/images/wave.jpg", price: 46 }],
-  },
-  {
-    id: "wassily-kandinsky",
-    slug: "kandinsky-wassily",
-    name: "Wassily Kandinsky",
-    school: "Bauhaus",
-    major: "Abstract Composition",
-    filter: "abstract",
-    medium: "Abstract",
-    city: "Munich, DE",
-    bio: "Kandinsky pioneered pure abstraction — shapes and color used to express feeling directly.",
-    tagBg: "#12172A",
-    tagTxt: "#F5A623",
-    sales: 74,
-    artworks: [{ title: "Composition VIII", src: "/images/kandinsky.jpg", price: 42 }],
-  },
+const TAG_PALETTE: [string, string][] = [
+  ["#3BAFD4", "#fff"],
+  ["#F5A623", "#12172A"],
+  ["#E8503A", "#fff"],
+  ["#12172A", "#F5A623"],
 ];
 
+function dedupeArtworksById(artworks: GalleryArtwork[]): GalleryArtwork[] {
+  const seen = new Set<string>();
+  const out: GalleryArtwork[] = [];
+  for (const w of artworks) {
+    if (seen.has(w.id)) continue;
+    seen.add(w.id);
+    out.push(w);
+  }
+  return out;
+}
+
+const TICKER_PLACEHOLDER = "College Creatives · Opening Soon";
+
+function buildTickerTrackRows(artists: { name: string; school: string }[]): string[] {
+  const base =
+    artists.length > 0
+      ? artists.map((a) => {
+          const name = String(a.name ?? "").trim();
+          const school = String(a.school ?? "").trim();
+          return `${name} · ${school}`;
+        })
+      : Array.from({ length: 4 }, () => TICKER_PLACEHOLDER);
+  return [...base, ...base];
+}
+
 export default function Page() {
-  const [filter, setFilter] = useState<"all" | "painting" | "print" | "abstract">("all");
+  const [galleryArtists, setGalleryArtists] = useState<GalleryArtist[]>([]);
+  const [galleryReady, setGalleryReady] = useState(false);
+  const [approvedArtistCount, setApprovedArtistCount] = useState(0);
+  const [tickerTrackItems, setTickerTrackItems] = useState<string[]>(() => buildTickerTrackRows([]));
+  const [filter, setFilter] = useState<"all" | MediumOption>("all");
   const [heroBgUrl, setHeroBgUrl] = useState("/images/sunset_college.png");
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "ok" | "err">("idle");
@@ -120,6 +85,96 @@ export default function Page() {
     sync();
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/artists", { cache: "no-store" });
+        const data: unknown = await res.json();
+        if (cancelled) return;
+        if (!res.ok || !data || typeof data !== "object" || !("artists" in data)) {
+          setApprovedArtistCount(0);
+          setTickerTrackItems(buildTickerTrackRows([]));
+          return;
+        }
+        const raw = (data as { artists: unknown }).artists;
+        if (!Array.isArray(raw)) {
+          setApprovedArtistCount(0);
+          setTickerTrackItems(buildTickerTrackRows([]));
+          return;
+        }
+        const list = raw.map((row) => {
+          const r = row as Record<string, unknown>;
+          return {
+            name: String(r.name ?? ""),
+            school: String(r.school ?? ""),
+          };
+        });
+        setApprovedArtistCount(list.length);
+        setTickerTrackItems(buildTickerTrackRows(list));
+      } catch {
+        if (!cancelled) {
+          setApprovedArtistCount(0);
+          setTickerTrackItems(buildTickerTrackRows([]));
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/gallery");
+        const data: unknown = await res.json();
+        if (cancelled || !res.ok || !data || typeof data !== "object" || !("artists" in data)) {
+          return;
+        }
+        const raw = (data as { artists: unknown }).artists;
+        if (!Array.isArray(raw)) return;
+        const mapped: GalleryArtist[] = raw.map((row: unknown, i: number) => {
+          const r = row as Record<string, unknown>;
+          const arts = Array.isArray(r.artworks) ? r.artworks : [];
+          const [tagBg, tagTxt] = TAG_PALETTE[i % TAG_PALETTE.length];
+          return {
+            id: String(r.id ?? ""),
+            slug: String(r.slug ?? ""),
+            name: String(r.name ?? ""),
+            school: String(r.school ?? ""),
+            major: String(r.major ?? ""),
+            medium: String(r.medium ?? ""),
+            bio: String(r.bio ?? ""),
+            tagBg,
+            tagTxt,
+            sales: 0,
+            artworks: dedupeArtworksById(
+              arts.map((w: unknown) => {
+                const x = w as Record<string, unknown>;
+                const med = x.medium;
+                return {
+                  id: String(x.id ?? x.title ?? ""),
+                  title: String(x.title ?? ""),
+                  src: String(x.src ?? ""),
+                  price: Number(x.price ?? 0),
+                  medium: typeof med === "string" ? med : med == null ? null : String(med),
+                };
+              }),
+            ),
+          };
+        });
+        if (!cancelled) setGalleryArtists(mapped);
+      } finally {
+        if (!cancelled) setGalleryReady(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const onNewsletterSubmit = async (e: FormEvent) => {
@@ -166,12 +221,20 @@ export default function Page() {
   };
 
   const filteredArtists = useMemo(() => {
-    if (filter === "all") return artists;
-    return artists.filter((a) => a.filter === filter);
-  }, [filter]);
+    if (filter === "all") return galleryArtists;
+    return galleryArtists.filter((artist) =>
+      artist.artworks.some((artwork) => {
+        const m = artwork.medium;
+        if (m == null) return false;
+        const t = String(m).trim();
+        if (t === "") return false;
+        return t === filter;
+      }),
+    );
+  }, [galleryArtists, filter]);
 
-  const featured = artists[0];
-  const featuredImg = featured.artworks[1] ?? featured.artworks[0];
+  const featured = galleryArtists[0];
+  const featuredImg = featured ? (featured.artworks[1] ?? featured.artworks[0]) : undefined;
 
   const css = `
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -188,8 +251,10 @@ body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: va
 .cc-hero h1 .hl-coral { color:#E8503A; }
 .cc-hero-sub { font-size:clamp(10px, 2.35vw, 15px); color:rgba(255,255,255,.6); line-height:1.8; max-width:none; margin:0 auto 36px; white-space:nowrap; text-align:center; }
 .cc-hero-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
-.cc-btn-amber { background:#F5A623; color:#12172A; padding:14px 32px; border-radius:40px; font-size:14px; font-weight:500; text-decoration:none; border:none; cursor:pointer; font-family:inherit; }
-.cc-btn-ghost { background:rgba(255,255,255,.1); color:rgba(255,255,255,.85); padding:14px 32px; border-radius:40px; font-size:14px; border:0.5px solid rgba(255,255,255,.25); text-decoration:none; font-family:inherit; }
+.cc-btn-amber { background:#F5A623; color:#12172A; padding:14px 32px; border-radius:40px; font-size:14px; font-weight:500; text-decoration:none; border:none; cursor:pointer; font-family:inherit; transition:background-color .2s ease,color .2s ease; }
+.cc-btn-amber:hover { background:#3BAFD4; color:#fff; }
+.cc-btn-ghost { background:rgba(255,255,255,.1); color:rgba(255,255,255,.85); padding:14px 32px; border-radius:40px; font-size:14px; border:0.5px solid rgba(255,255,255,.25); text-decoration:none; font-family:inherit; transition:background .2s ease,color .2s ease,border-color .2s ease; }
+.cc-btn-ghost:hover { background:#fff; color:#12172A; border-color:#fff; }
 .cc-scroll-cue { position:absolute; bottom:80px; left:50%; transform:translateX(-50%); z-index:2; display:flex; flex-direction:column; align-items:center; gap:10px; min-width:48px; min-height:48px; }
 .cc-scroll-line { width:2px; height:56px; background:linear-gradient(rgba(255,255,255,.3),transparent); animation:scrollpulse 2s ease-in-out infinite; }
 .cc-scroll-text { font-family:"DM Mono",monospace; font-size:12px; letter-spacing:2px; color:rgba(255,255,255,.35); text-transform:uppercase; }
@@ -219,8 +284,9 @@ body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: va
 .cc-gallery-eyebrow { font-family:"DM Mono",monospace; font-size:10px; letter-spacing:3px; color:var(--page-text-muted); text-transform:uppercase; margin-bottom:10px; }
 .cc-gallery-title { font-family:"Playfair Display",serif; font-size:38px; font-weight:700; letter-spacing:-1px; }
 .cc-filters { display:flex; gap:10px; margin-top:22px; margin-bottom:40px; flex-wrap:wrap; }
-.cc-filter-pill { padding:7px 16px; border-radius:40px; font-size:11px; font-weight:500; border:0.5px solid var(--page-border); background:transparent; color:var(--page-text-muted); cursor:pointer; font-family:inherit; }
-.cc-filter-pill.active { background:#12172A; color:#fff; }
+.cc-filter-pill { padding:7px 16px; border-radius:40px; font-size:11px; font-weight:500; border:0.5px solid var(--page-border); background:transparent; color:var(--page-text-muted); cursor:pointer; font-family:inherit; transition:background .15s ease,color .15s ease,border-color .15s ease; }
+.cc-filter-pill:hover:not(.active) { background:#6b7280; color:#fff; border-color:#6b7280; }
+.cc-filter-pill.active { background:#12172A; color:#fff; border-color:#12172A; }
 
 .cc-artist-row { margin-bottom:72px; overflow:visible; }
 .cc-artist-meta { display:flex; align-items:baseline; justify-content:space-between; padding-bottom:18px; border-bottom:0.5px solid var(--page-border); margin-bottom:30px; overflow:visible; }
@@ -239,7 +305,9 @@ body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: va
 .cc-art-piece:hover { transform:translateY(-12px); }
 .cc-art-piece img { display:block; border-radius:2px; box-shadow:0 32px 80px rgba(0,0,0,.22), 0 14px 36px rgba(0,0,0,.14), 0 4px 12px rgba(0,0,0,.1); max-height:360px; width:auto; height:auto; object-fit:contain; }
 .cc-art-cap { margin-top:16px; }
-.cc-art-title { font-family:"Playfair Display",serif; font-size:14px; font-style:italic; color:var(--page-text); }
+.cc-art-cap-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+.cc-art-title { flex:1; min-width:0; font-family:"Playfair Display",serif; font-size:14px; font-style:italic; color:var(--page-text); }
+.cc-art-medium-pill { flex-shrink:0; font-size:9px; font-weight:500; padding:3px 10px; border-radius:3px; text-transform:uppercase; letter-spacing:.8px; border:0.5px solid var(--page-border); color:var(--page-text-muted); background:transparent; font-family:"DM Sans",sans-serif; margin:0; }
 .cc-art-price { font-size:13px; font-weight:500; color:#E8503A; margin-top:3px; }
 .cc-art-payout { font-size:11px; color:var(--page-text-muted); font-family:"DM Mono",monospace; margin-top:2px; }
 .cc-row-sep { height:0.5px; background:var(--page-border); margin-bottom:72px; }
@@ -255,14 +323,18 @@ body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: va
 .cc-feat-right img { max-height:310px; max-width:100%; object-fit:contain; border-radius:2px; box-shadow:0 32px 80px rgba(0,0,0,.6), 0 14px 36px rgba(0,0,0,.4); }
 
 .cc-mission-split { display:grid; grid-template-columns:1fr 2fr; align-items:stretch; }
-.cc-mission-left { background:#F5A623; padding:52px; color:#12172A; text-align:left; }
+.cc-mission-left { background:#F5A623; padding:52px; color:#12172A; display:flex; flex-direction:column; align-items:center; }
+.cc-mission-left-inner { align-self:center; width:fit-content; max-width:100%; text-align:left; box-sizing:border-box; }
 .cc-process-label { font-family:"DM Mono",monospace; font-size:10px; letter-spacing:3px; color:rgba(18,23,42,.55); text-transform:uppercase; margin:0 0 14px; }
 .cc-process-h { font-family:"Playfair Display",serif; font-size:36px; font-weight:700; letter-spacing:-1px; color:#12172A; line-height:1.12; margin:0 0 28px; }
 .cc-process-steps .cc-step { display:flex; gap:12px; margin-bottom:20px; align-items:flex-start; }
 .cc-process-steps .cc-step:last-child { margin-bottom:0; }
-.cc-process-steps .cc-step-num { width:28px; height:28px; border-radius:50%; background:#12172A; color:#F5A623; font-size:12px; font-family:"Playfair Display",serif; display:flex; align-items:center; justify-content:center; flex-shrink:0; line-height:1; }
+.cc-process-steps .cc-step-num { width:28px; height:28px; border-radius:50%; background:#12172A; color:#F5A623; font-size:17px; font-family:"Playfair Display",serif; display:grid; place-items:center; flex-shrink:0; line-height:0; }
+.cc-process-steps .cc-step-num-inner { display:block; line-height:1; transform:translateY(-3px); }
 .cc-process-steps .cc-step-title { font-size:14px; color:#12172A; font-weight:500; margin-bottom:4px; }
 .cc-process-steps .cc-step-desc { font-size:12px; color:rgba(18,23,42,.55); line-height:1.5; }
+.cc-btn-process-apply { background:#fff; color:#12172A; padding:14px 32px; border-radius:40px; font-size:14px; font-weight:500; text-decoration:none; border:none; cursor:pointer; font-family:"DM Sans",sans-serif; display:block; width:fit-content; margin:28px auto 0; transition:background .2s ease,color .2s ease; }
+.cc-btn-process-apply:hover { background:#E8503A; color:#fff; }
 .cc-mission-right { background:var(--page-bg); padding:52px; text-align:center; display:flex; flex-direction:column; align-items:center; }
 .cc-more-inner { width:100%; max-width:520px; margin:0 auto; }
 .cc-more-label { font-family:"DM Mono",monospace; font-size:10px; letter-spacing:3px; color:var(--page-text-muted); text-transform:uppercase; margin:0 0 14px; }
@@ -273,7 +345,8 @@ body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: va
 .cc-more-fields label { flex:1 1 200px; min-width:0; display:grid; gap:6px; }
 .cc-more-field-lbl { font-family:"DM Mono",monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--page-text-muted); }
 .cc-more-fields input { padding:12px 14px; border-radius:8px; border:0.5px solid #ddd; font-size:14px; font-family:"DM Sans",sans-serif; width:100%; box-sizing:border-box; }
-.cc-more-form > button { width:100%; background:#12172A; color:#fff; border:none; border-radius:40px; padding:14px 24px; font-size:14px; font-weight:500; cursor:pointer; font-family:"DM Sans",sans-serif; }
+.cc-more-form > button { width:100%; background:#12172A; color:#fff; border:none; border-radius:40px; padding:14px 24px; font-size:14px; font-weight:500; cursor:pointer; font-family:"DM Sans",sans-serif; transition:background .2s ease,color .2s ease; }
+.cc-more-form > button:hover:not(:disabled) { background:#F5A623; color:#12172A; }
 .cc-more-form > button:disabled { opacity:.6; cursor:wait; }
 .cc-more-status { margin:0; font-size:14px; color:var(--page-text); }
 
@@ -322,7 +395,7 @@ body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: va
           }}
         />
         <div className="cc-hero-inner">
-          <p className="cc-hero-kicker">Homepage</p>
+          <p className="cc-hero-kicker">Welcome</p>
           <h1>
             Original art
             <br />
@@ -350,14 +423,11 @@ body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: va
 
       <section className="cc-ticker" aria-label="Featured artists">
         <div className="cc-ticker-track">
-          <span className="cc-ticker-item">Vincent van Gogh · Royal Academy of Arts</span>
-          <span className="cc-ticker-item">Leonardo da Vinci · Florentine Academy</span>
-          <span className="cc-ticker-item">Katsushika Hokusai · Kano School of Art</span>
-          <span className="cc-ticker-item">Wassily Kandinsky · Bauhaus</span>
-          <span className="cc-ticker-item">Vincent van Gogh · Royal Academy of Arts</span>
-          <span className="cc-ticker-item">Leonardo da Vinci · Florentine Academy</span>
-          <span className="cc-ticker-item">Katsushika Hokusai · Kano School of Art</span>
-          <span className="cc-ticker-item">Wassily Kandinsky · Bauhaus</span>
+          {tickerTrackItems.map((label, idx) => (
+            <span key={`${idx}-${label.slice(0, 24)}`} className="cc-ticker-item">
+              {label}
+            </span>
+          ))}
         </div>
       </section>
 
@@ -367,7 +437,7 @@ body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: va
           <div className="cc-stat-label">Goes to the artist</div>
         </div>
         <div className="cc-stat s2">
-          <div className="cc-stat-num">47</div>
+          <div className="cc-stat-num">{approvedArtistCount}</div>
           <div className="cc-stat-label">Student artists</div>
         </div>
         <div className="cc-stat s3">
@@ -378,15 +448,10 @@ body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: va
 
       <section id="gallery" className="cc-gallery">
         <p className="cc-gallery-eyebrow">The gallery</p>
-        <h2 className="cc-gallery-title">Browse by artist</h2>
+        <h2 className="cc-gallery-title">Browse by medium</h2>
         <div className="cc-filters">
           {(
-            [
-              ["all", "All"],
-              ["painting", "Painting"],
-              ["print", "Printmaking"],
-              ["abstract", "Abstract"],
-            ] as const
+            [["all", "All"] as const, ...MEDIUM_OPTIONS.map((m) => [m, m] as const)]
           ).map(([key, label]) => (
             <button
               key={key}
@@ -399,13 +464,20 @@ body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: va
           ))}
         </div>
 
-        {filteredArtists.map((artist) => (
+        {galleryReady && filteredArtists.length === 0 ? (
+          <p style={{ fontSize: 15, lineHeight: 1.75, color: "var(--page-text-muted)", margin: "8px 0 0" }}>
+            No artists in this medium yet.
+          </p>
+        ) : null}
+
+        {filteredArtists.map((artist, artistIdx) => (
           <div key={artist.id} className="cc-gallery-artist">
             <article className="cc-artist-row">
               <div className="cc-artist-meta">
                 <div>
                   <p className="cc-artist-idx">
-                    {String(artists.indexOf(artist) + 1).padStart(2, "0")} / 04
+                    {String(artistIdx + 1).padStart(2, "0")} /{" "}
+                    {String(filteredArtists.length).padStart(2, "0")}
                   </p>
                   <div>
                     <a href={`/artist/${artist.slug}`} className="cc-artist-name">
@@ -419,7 +491,7 @@ body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: va
                     </span>
                   </div>
                   <p className="cc-artist-school">
-                    {artist.school} · {artist.major} · {artist.city}
+                    {artist.school} · {artist.major}
                   </p>
                 </div>
                 <div className="cc-artist-right">
@@ -433,10 +505,15 @@ body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: va
               <div className="cc-art-strip-outer">
                 <div className="cc-art-strip">
                   {artist.artworks.map((art) => (
-                    <div key={art.title} className="cc-art-piece">
+                    <div key={art.id} className="cc-art-piece">
                       <img src={art.src} alt={art.title} />
                       <div className="cc-art-cap">
-                        <div className="cc-art-title">{art.title}</div>
+                        <div className="cc-art-cap-head">
+                          <div className="cc-art-title">{art.title}</div>
+                          {art.medium?.trim() ? (
+                            <span className="cc-art-medium-pill">{art.medium.trim()}</span>
+                          ) : null}
+                        </div>
                         <div className="cc-art-price">${art.price}</div>
                         <div className="cc-art-payout">${Math.round(art.price * 0.9)} to artist</div>
                       </div>
@@ -445,61 +522,71 @@ body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: va
                 </div>
               </div>
             </article>
-            {filteredArtists.indexOf(artist) < filteredArtists.length - 1 ? (
-              <div className="cc-row-sep" />
-            ) : null}
+            {artistIdx < filteredArtists.length - 1 ? <div className="cc-row-sep" /> : null}
           </div>
         ))}
       </section>
 
-      <section className="cc-featured">
-        <div className="cc-feat-left">
-          <div>
-            <p className="cc-feat-kicker">Featured artist</p>
-            <h3 className="cc-feat-name">{featured.name}</h3>
-            <p className="cc-feat-school">{featured.school}</p>
-            <p className="cc-feat-bio">{featured.bio}</p>
+      {featured && featuredImg ? (
+        <section className="cc-featured">
+          <div className="cc-feat-left">
+            <div>
+              <p className="cc-feat-kicker">Featured artist</p>
+              <h3 className="cc-feat-name">{featured.name}</h3>
+              <p className="cc-feat-school">{featured.school}</p>
+              <p className="cc-feat-bio">{featured.bio}</p>
+            </div>
+            <a href={`/artist/${featured.slug}`} className="cc-feat-btn">
+              View full profile →
+            </a>
           </div>
-          <a href={`/artist/${featured.slug}`} className="cc-feat-btn">
-            View full profile →
-          </a>
-        </div>
-        <div className="cc-feat-right">
-          <img src={featuredImg.src} alt={featuredImg.title} />
-        </div>
-      </section>
+          <div className="cc-feat-right">
+            <img src={featuredImg.src} alt={featuredImg.title} />
+          </div>
+        </section>
+      ) : null}
 
       <section id="mission" className="cc-mission-split">
         <div className="cc-mission-left">
-          <p className="cc-process-label">THE PROCESS</p>
-          <h2 className="cc-process-h">How to become an artist!</h2>
-          <div className="cc-process-steps">
-            {[
-              [
-                "Apply with your .edu email",
-                "We verify you're an active student at an accredited university",
-              ],
-              [
-                "Get approved by our team",
-                "We review every application personally — no auto-approvals",
-              ],
-              [
-                "Submit your artwork to us",
-                "We handle listings, mockups and Printful product creation",
-              ],
-              [
-                "Earn 90% of your markup",
-                "Paid out automatically via Stripe Connect. We take 10%.",
-              ],
-            ].map(([title, desc], idx) => (
-              <div key={title} className="cc-step">
-                <div className="cc-step-num">{idx + 1}</div>
-                <div>
-                  <div className="cc-step-title">{title}</div>
-                  <div className="cc-step-desc">{desc}</div>
+          <div className="cc-mission-left-inner">
+            <p className="cc-process-label">THE PROCESS</p>
+            <h2 className="cc-process-h">
+              How to become an{" "}
+              <span style={{ fontStyle: "italic", color: "#E8503A" }}>artist!</span>
+            </h2>
+            <div className="cc-process-steps">
+              {[
+                [
+                  "Apply with your .edu email",
+                  "We verify you're an active student at an accredited university",
+                ],
+                [
+                  "Get approved by our team",
+                  "We review every application personally — no auto-approvals",
+                ],
+                [
+                  "Submit your artwork to us",
+                  "We handle listings, mockups and Printful product creation",
+                ],
+                [
+                  "Earn 90% of your markup",
+                  "Paid out automatically via Stripe Connect. We take 10%.",
+                ],
+              ].map(([title, desc], idx) => (
+                <div key={title} className="cc-step">
+                  <div className="cc-step-num">
+                    <span className="cc-step-num-inner">{idx + 1}</span>
+                  </div>
+                  <div>
+                    <div className="cc-step-title">{title}</div>
+                    <div className="cc-step-desc">{desc}</div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <a href="/apply" className="cc-btn-process-apply">
+              Become an artist →
+            </a>
           </div>
         </div>
         <div className="cc-mission-right">

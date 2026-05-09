@@ -4,6 +4,7 @@ import type { CSSProperties } from "react";
 import { FormEvent, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { isEduEmail } from "@/lib/edu";
+import { MEDIUM_OPTIONS } from "@/lib/medium-options";
 
 const initial = {
   name: "",
@@ -84,6 +85,34 @@ export default function ApplyPage() {
             @media (max-width: 900px) {
               .apply-two-col { grid-template-columns: 1fr !important; padding-left: 24px !important; padding-right: 24px !important; }
             }
+            .apply-form-field:focus,
+            .apply-form-field:focus-visible {
+              outline: none;
+              border-color: #e8503a;
+              box-shadow: 0 0 0 2px rgba(232, 80, 58, 0.45);
+            }
+            .apply-submit-btn {
+              margin-top: 4px;
+              width: 100%;
+              background: #f5a623;
+              color: #12172a;
+              border: none;
+              border-radius: 40px;
+              padding: 14px;
+              font-size: 14px;
+              font-weight: 600;
+              font-family: "DM Sans", sans-serif;
+              cursor: pointer;
+              transition: background 0.2s ease, color 0.2s ease;
+            }
+            .apply-submit-btn:hover:not(:disabled) {
+              background: #e8503a;
+              color: #fff;
+            }
+            .apply-submit-btn:disabled {
+              cursor: wait;
+              opacity: 0.6;
+            }
           `}</style>
           <div style={{ textAlign: "left", paddingTop: 8 }}>
             <p
@@ -142,6 +171,7 @@ export default function ApplyPage() {
                 value={form.name}
                 onChange={(ev) => setForm((p) => ({ ...p, name: ev.target.value }))}
                 placeholder="Your full name"
+                className="apply-form-field"
                 style={inputStyle}
               />
             </label>
@@ -153,6 +183,7 @@ export default function ApplyPage() {
                 value={form.email}
                 onChange={(ev) => setForm((p) => ({ ...p, email: ev.target.value }))}
                 placeholder="you@university.edu"
+                className="apply-form-field"
                 style={inputStyle}
               />
             </label>
@@ -163,6 +194,7 @@ export default function ApplyPage() {
                 value={form.school}
                 onChange={(ev) => setForm((p) => ({ ...p, school: ev.target.value }))}
                 placeholder="e.g. Boston University"
+                className="apply-form-field"
                 style={inputStyle}
               />
             </label>
@@ -173,18 +205,28 @@ export default function ApplyPage() {
                 value={form.major}
                 onChange={(ev) => setForm((p) => ({ ...p, major: ev.target.value }))}
                 placeholder="e.g. Fine Arts"
+                className="apply-form-field"
                 style={inputStyle}
               />
             </label>
             <label style={labelBlock}>
               <span style={labelText}>Medium / Style</span>
-              <input
+              <select
                 required
                 value={form.medium}
                 onChange={(ev) => setForm((p) => ({ ...p, medium: ev.target.value }))}
-                placeholder="e.g. Oil painting, printmaking, digital"
-                style={inputStyle}
-              />
+                className="apply-form-field"
+                style={{ ...inputStyle, cursor: "pointer" }}
+              >
+                <option value="" disabled>
+                  Select medium
+                </option>
+                {MEDIUM_OPTIONS.map((m) => (
+                  <option key={m} value={m}>
+                    {m}
+                  </option>
+                ))}
+              </select>
             </label>
             <label style={labelBlock}>
               <span style={labelText}>Portfolio Link (optional)</span>
@@ -193,6 +235,7 @@ export default function ApplyPage() {
                 value={form.portfolio_url}
                 onChange={(ev) => setForm((p) => ({ ...p, portfolio_url: ev.target.value }))}
                 placeholder="Instagram, Behance, personal site"
+                className="apply-form-field"
                 style={inputStyle}
               />
             </label>
@@ -204,27 +247,13 @@ export default function ApplyPage() {
                 value={form.bio}
                 onChange={(ev) => setForm((p) => ({ ...p, bio: ev.target.value }))}
                 placeholder="What inspires you?"
+                className="apply-form-field"
                 style={{ ...inputStyle, resize: "vertical", minHeight: 120 }}
               />
             </label>
             {error ? <p style={{ margin: 0, color: "#E8503A", fontSize: 14 }}>{error}</p> : null}
             {status ? <p style={{ margin: 0, color: "#3BAFD4", fontSize: 14 }}>{status}</p> : null}
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                marginTop: 4,
-                width: "100%",
-                background: "#F5A623",
-                color: "#12172A",
-                border: "none",
-                borderRadius: 40,
-                padding: 14,
-                fontSize: 14,
-                fontWeight: 600,
-                cursor: loading ? "wait" : "pointer",
-              }}
-            >
+            <button type="submit" disabled={loading} className="apply-submit-btn">
               {loading ? "Submitting…" : "Submit application"}
             </button>
             <p style={{ margin: "4px 0 0", fontSize: 12, lineHeight: 1.65, color: "rgba(255,255,255,.45)", textAlign: "left" }}>

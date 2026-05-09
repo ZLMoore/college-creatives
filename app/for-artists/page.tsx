@@ -48,6 +48,34 @@ export default function ForArtistsPage() {
         flexDirection: "column",
       }}
     >
+      <style>{`
+        .for-artists-dashboard-btn {
+          width: 100%;
+          max-width: 480px;
+          margin-left: auto;
+          margin-right: auto;
+          box-sizing: border-box;
+          margin-top: 2px;
+          background: #f5a623;
+          color: #12172a;
+          border: none;
+          border-radius: 40px;
+          padding: 14px 18px;
+          font-size: 14px;
+          font-weight: 600;
+          font-family: "DM Sans", sans-serif;
+          cursor: pointer;
+          transition: background 0.2s ease, color 0.2s ease;
+        }
+        .for-artists-dashboard-btn:hover:not(:disabled) {
+          background: #e8503a;
+          color: #fff;
+        }
+        .for-artists-dashboard-btn:disabled {
+          cursor: wait;
+          opacity: 0.6;
+        }
+      `}</style>
       <SiteHeader />
 
       <main
@@ -158,22 +186,7 @@ export default function ForArtistsPage() {
             {error ? (
               <p style={{ ...fieldWidth, margin: 0, color: "#E8503A", fontSize: 14, textAlign: "left" }}>{error}</p>
             ) : null}
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                ...fieldWidth,
-                marginTop: 2,
-                background: "#F5A623",
-                color: "#12172A",
-                border: "none",
-                borderRadius: 40,
-                padding: "14px 18px",
-                fontSize: 14,
-                fontWeight: 600,
-                cursor: loading ? "wait" : "pointer",
-              }}
-            >
+            <button type="submit" disabled={loading} className="for-artists-dashboard-btn">
               {loading ? "Redirecting..." : "Access my dashboard →"}
             </button>
 

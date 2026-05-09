@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { MEDIUM_OPTIONS } from "@/lib/medium-options";
 
 const initialState = {
   name: "",
@@ -48,20 +49,41 @@ export const ApplyForm = () => {
         ["major", "Major"],
         ["medium", "Primary Medium"],
         ["portfolio_url", "Portfolio URL (optional)"],
-      ].map(([key, label]) => (
-        <label key={key} className="grid gap-2 text-sm font-semibold text-navy">
-          {label}
-          <input
-            required={key !== "portfolio_url"}
-            type={key === "email" ? "email" : "text"}
-            value={form[key as keyof typeof form]}
-            onChange={(event) =>
-              setForm((prev) => ({ ...prev, [key]: event.target.value }))
-            }
-            className="rounded-lg border border-navy/20 px-3 py-2 outline-none ring-coral transition focus:ring-2"
-          />
-        </label>
-      ))}
+      ].map(([key, label]) =>
+        key === "medium" ? (
+          <label key={key} className="grid gap-2 text-sm font-semibold text-navy">
+            {label}
+            <select
+              required
+              value={form.medium}
+              onChange={(event) => setForm((prev) => ({ ...prev, medium: event.target.value }))}
+              className="rounded-lg border border-navy/20 px-3 py-2 outline-none ring-coral transition focus:ring-2"
+            >
+              <option value="" disabled>
+                Select medium
+              </option>
+              {MEDIUM_OPTIONS.map((m) => (
+                <option key={m} value={m}>
+                  {m}
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : (
+          <label key={key} className="grid gap-2 text-sm font-semibold text-navy">
+            {label}
+            <input
+              required={key !== "portfolio_url"}
+              type={key === "email" ? "email" : "text"}
+              value={form[key as keyof typeof form]}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, [key]: event.target.value }))
+              }
+              className="rounded-lg border border-navy/20 px-3 py-2 outline-none ring-coral transition focus:ring-2"
+            />
+          </label>
+        ),
+      )}
 
       <label className="grid gap-2 text-sm font-semibold text-navy">
         Artist Bio

@@ -24,6 +24,7 @@ create table if not exists artworks (
   printful_product_id text,
   image_url text not null,
   curator_note text,
+  medium text,
   status text not null default 'draft' check (status in ('draft', 'published', 'archived')),
   created_at timestamptz not null default now()
 );

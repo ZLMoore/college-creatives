@@ -40,6 +40,7 @@ export type Artwork = {
   printful_product_id: string | null;
   image_url: string;
   curator_note: string | null;
+  medium: string | null;
   status: ArtworkStatus;
   created_at: string;
 };

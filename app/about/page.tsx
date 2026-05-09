@@ -35,7 +35,11 @@ export default function MissionPage() {
   return (
     <div
       style={{
+        margin: 0,
+        padding: 0,
         minHeight: "100vh",
+        width: "100%",
+        overflowX: "hidden",
         background: "var(--page-bg)",
         color: "var(--page-text)",
         fontFamily: '"DM Sans", sans-serif',
@@ -78,14 +82,8 @@ export default function MissionPage() {
         </h1>
       </section>
 
-      <div className="cc-about-scroll" aria-hidden>
-        <span className="cc-about-scroll-text">Scroll</span>
-        <span className="cc-about-scroll-chevron" />
-      </div>
-
       <main style={{ maxWidth: 820, margin: "0 auto", padding: "3rem 2rem" }}>
         <section style={{ maxWidth: 820, margin: "0 auto" }}>
-          <div style={{ width: 40, height: 2, background: "#E8503A", marginBottom: 30 }} />
           <p style={{ margin: "0 0 22px", fontSize: 18, lineHeight: 1.9, color: "var(--page-text)" }}>
             College Creatives began with a simple observation: many students pursuing rigorous academic paths quietly
             leave parts of themselves behind.
@@ -102,14 +100,14 @@ export default function MissionPage() {
                 margin: 0,
                 fontFamily: '"Playfair Display", serif',
                 fontStyle: "italic",
-                fontSize: "20px",
+                fontSize: "24px",
                 lineHeight: 1.45,
                 color: "var(--page-text)",
                 marginBottom: "1rem",
               }}
             >
-              &quot;We exist to celebrate the artistic side of students whose chosen fields do not
-              traditionally foster creativity.&quot;
+              &quot;College Creatives exists to celebrate the artistic side of students whose chosen
+              fields do not traditionally foster creativity.&quot;
             </p>
             <p style={{ margin: "0", fontSize: 14, fontStyle: "normal", color: "#F5A623" }}>— Our Founder</p>
           </section>
@@ -122,6 +120,10 @@ export default function MissionPage() {
             approved, they upload their work, set their prices, and fulfill orders through Printful&apos;s print-on-demand
             infrastructure, with direct payouts through Stripe.
           </p>
+          <div className="cc-about-scroll" aria-hidden>
+            <span className="cc-about-scroll-text">Scroll</span>
+            <span className="cc-about-scroll-chevron" />
+          </div>
         </section>
 
         <hr
@@ -135,7 +137,15 @@ export default function MissionPage() {
 
         <section style={{ maxWidth: 820, margin: "64px 0 0" }}>
           <div className="founder-grid">
-            <div style={{ width: 320, flexShrink: 0, display: "flex", alignSelf: "stretch" }}>
+            <div
+              style={{
+                width: "100%",
+                maxWidth: 320,
+                flexShrink: 0,
+                display: "flex",
+                alignSelf: "stretch",
+              }}
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/images/about.png"
@@ -173,17 +183,18 @@ export default function MissionPage() {
                 Zakora Moore
               </h2>
               <p style={{ margin: "0 0 16px", fontSize: 16, lineHeight: 1.85, color: "var(--page-text)" }}>
-                Zakora is an aspiring physician-scientist whose path has never fit neatly into one category. Currently
-                working in clinical research and pursuing a career in medicine, she has spent years navigating spaces
-                that rarely make room for her artistic passions.
+                Zakora Moore is an aspiring physician-scientist whose path has never fit neatly into one category.
+                Currently working in research and pursuing a career in medicine, she has spent years navigating spaces
+                that rarely make room for artists.
               </p>
               <p style={{ margin: "0 0 16px", fontSize: 16, lineHeight: 1.85, color: "var(--page-text)" }}>
-                Her experiences led her to build College Creatives. She wanted a place that acknowledged what so many
-                science and pre-professional students already know: that creativity does not disappear when you choose
-                a demanding field. It just goes looking for an outlet.
+                It was that tension that led her to build College Creatives. She wanted a place that acknowledged what
+                so many science and pre-professional students already know: that creativity does not disappear when you
+                choose a demanding field. It just goes looking for an outlet.
               </p>
               <p style={{ margin: 0, fontSize: 16, lineHeight: 1.85, color: "var(--page-text)" }}>
-                College Creatives is that outlet.
+                College Creatives is that outlet. Built from scratch with a custom application process, print-on-demand
+                fulfillment through Printful, and direct artist payouts via Stripe.
               </p>
             </div>
           </div>
@@ -228,14 +239,13 @@ export default function MissionPage() {
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          padding: 1.5rem 0;
-          background: #e8503a;
+          margin: 2rem auto;
         }
         .cc-about-scroll-text {
           font-family: "DM Mono", monospace;
           font-size: 12px;
           letter-spacing: 2px;
-          color: rgba(247, 244, 239, 0.45);
+          color: rgba(18, 23, 42, 0.4);
           text-transform: uppercase;
         }
         .cc-about-scroll-chevron {
@@ -243,8 +253,8 @@ export default function MissionPage() {
           display: block;
           width: 10px;
           height: 10px;
-          border-right: 2px solid rgba(247, 244, 239, 0.45);
-          border-bottom: 2px solid rgba(247, 244, 239, 0.45);
+          border-right: 2px solid rgba(18, 23, 42, 0.4);
+          border-bottom: 2px solid rgba(18, 23, 42, 0.4);
           transform: rotate(45deg);
           animation: cc-about-scroll-nudge 2s ease-in-out infinite;
         }
@@ -262,17 +272,17 @@ export default function MissionPage() {
 
         .founder-grid { display: flex; align-items: stretch; gap: 2.5rem; }
 
-        .cc-newsletter { background:#12172A; padding:64px 48px 72px; text-align:center; color:#fff; margin-top:4rem; }
+        .cc-newsletter { background:#12172A; padding:64px 48px 72px; text-align:center; color:#fff; margin-top:4rem; font-family:"DM Sans",sans-serif; }
         .cc-newsletter-label { font-family:"DM Mono",monospace; font-size:10px; letter-spacing:3px; color:rgba(255,255,255,.45); text-transform:uppercase; margin:0 0 14px; }
         .cc-newsletter-heading { font-family:"Playfair Display",serif; font-size:clamp(28px,4vw,40px); font-weight:700; letter-spacing:-0.5px; color:#fff; margin:0 0 18px; line-height:1.15; }
         .cc-newsletter-heading .cc-newsletter-loop { font-style:italic; color:#F5A623; }
-        .cc-newsletter-sub { font-size:15px; color:rgba(255,255,255,.65); line-height:1.75; max-width:560px; margin:0 auto 36px; }
+        .cc-newsletter-sub { font-family:"DM Sans",sans-serif; font-size:15px; color:rgba(255,255,255,.65); line-height:1.75; max-width:560px; margin:0 auto 36px; }
         .cc-newsletter-form { display:flex; flex-direction:row; justify-content:center; align-items:stretch; gap:12px; max-width:560px; margin:0 auto; }
         .cc-newsletter-form input { width:320px; max-width:100%; background:rgba(255,255,255,.06); border:0.5px solid rgba(255,255,255,.12); border-radius:8px; padding:14px 16px; font-size:14px; color:#fff; font-family:"DM Sans",sans-serif; }
         .cc-newsletter-form input::placeholder { color:rgba(255,255,255,.35); }
         .cc-newsletter-form button { flex:0 0 auto; background:#E8503A; color:#fff; border:none; border-radius:40px; padding:14px 28px; font-size:14px; font-weight:600; font-family:"DM Sans",sans-serif; cursor:pointer; }
         .cc-newsletter-form button:disabled { opacity:.6; cursor:wait; }
-        .cc-newsletter-feedback { margin:18px 0 0; font-size:14px; }
+        .cc-newsletter-feedback { font-family:"DM Sans",sans-serif; margin:18px 0 0; font-size:14px; }
         .cc-newsletter-feedback.ok { color:#3BAFD4; }
         .cc-newsletter-feedback.err { color:#E8503A; }
 
@@ -281,6 +291,17 @@ export default function MissionPage() {
             flex-direction: column;
           }
           .cc-newsletter { padding:48px 20px 56px; }
+          .cc-newsletter-form {
+            flex-direction: column;
+            align-items: stretch;
+            max-width: 100%;
+          }
+          .cc-newsletter-form input {
+            width: 100%;
+          }
+          .cc-newsletter-form button {
+            width: 100%;
+          }
         }
       `}</style>
     </div>

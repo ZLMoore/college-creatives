@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { MediumOption } from "./medium-options";
 
 export type SeedArtworkInput = {
   title: string;
@@ -6,6 +7,7 @@ export type SeedArtworkInput = {
   price: number;
   image_url: string;
   curator_note: string | null;
+  medium: MediumOption;
 };
 
 export type SeedArtistInput = {
@@ -37,18 +39,21 @@ export const DEMO_SEED_ARTISTS: SeedArtistInput[] = [
         price: 44,
         image_url: "/images/starry-rhone.jpg",
         curator_note: null,
+        medium: "Oil Painting",
       },
       {
         title: "The Starry Night",
         price: 52,
         image_url: "/images/starry-night.jpg",
         curator_note: null,
+        medium: "Oil Painting",
       },
       {
         title: "Self-Portrait with Palette",
         price: 38,
         image_url: "/images/vangogh-self.jpg",
         curator_note: null,
+        medium: "Oil Painting",
       },
     ],
   },
@@ -67,12 +72,14 @@ export const DEMO_SEED_ARTISTS: SeedArtistInput[] = [
         price: 56,
         image_url: "/images/mona-lisa.jpg",
         curator_note: null,
+        medium: "Oil Painting",
       },
       {
         title: "Creation of Adam",
         price: 48,
         image_url: "/images/creation.jpg",
         curator_note: null,
+        medium: "Oil Painting",
       },
     ],
   },
@@ -91,6 +98,7 @@ export const DEMO_SEED_ARTISTS: SeedArtistInput[] = [
         price: 46,
         image_url: "/images/wave.jpg",
         curator_note: null,
+        medium: "Ink Wash",
       },
     ],
   },
@@ -109,6 +117,7 @@ export const DEMO_SEED_ARTISTS: SeedArtistInput[] = [
         price: 42,
         image_url: "/images/kandinsky.jpg",
         curator_note: null,
+        medium: "Oil Painting",
       },
     ],
   },
@@ -174,6 +183,11 @@ export async function seedDemoArtists(client: SupabaseClient): Promise<SeedDemoR
         .maybeSingle();
 
       if (existingArt?.id) {
+        const { error: upErr } = await client
+          .from("artworks")
+          .update({ medium: aw.medium })
+          .eq("id", existingArt.id);
+        if (upErr) throw upErr;
         out.artworksExisting++;
         continue;
       }
@@ -185,6 +199,7 @@ export async function seedDemoArtists(client: SupabaseClient): Promise<SeedDemoR
         price: aw.price,
         image_url: aw.image_url,
         curator_note: aw.curator_note,
+        medium: aw.medium,
         status: "published",
       });
 
