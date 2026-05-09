@@ -322,7 +322,7 @@ body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: va
           }}
         />
         <div className="cc-hero-inner">
-          <p className="cc-hero-kicker">Vol. 01  ·  The student gallery</p>
+          <p className="cc-hero-kicker">Homepage</p>
           <h1>
             Original art
             <br />
@@ -472,7 +472,7 @@ body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: va
       <section id="mission" className="cc-mission-split">
         <div className="cc-mission-left">
           <p className="cc-process-label">THE PROCESS</p>
-          <h2 className="cc-process-h">What does it mean to become a College Creative?</h2>
+          <h2 className="cc-process-h">How to become an artist!</h2>
           <div className="cc-process-steps">
             {[
               [
@@ -504,16 +504,16 @@ body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: va
         </div>
         <div className="cc-mission-right">
           <div className="cc-more-inner">
-            <p className="cc-more-label">STAY IN THE LOOP</p>
+            <p className="cc-more-label">INTEREST FORM</p>
             <h2 className="cc-more-h">Want more info?</h2>
             <p className="cc-more-sub">
-              Leave your name and email and we&apos;ll send you our mission, how selling works, and what
-              makes College Creatives different.
+              Leave your name and email and we&apos;ll tell you our requirements, how selling works, what
+              types of art you can sell!
             </p>
             <form className="cc-more-form" onSubmit={onMoreInfoSubmit}>
               <div className="cc-more-fields">
                 <label>
-                  <span className="cc-more-field-lbl">Name</span>
+                  <span className="cc-more-field-lbl">Preferred Name</span>
                   <input
                     required
                     value={moreInfoName}
