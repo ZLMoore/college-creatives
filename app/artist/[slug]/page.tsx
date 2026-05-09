@@ -76,6 +76,7 @@ export default function ArtistProfilePage() {
   }
 
   const { artist, artworks } = payload;
+  console.log("artworks count:", artworks.length);
 
   return (
     <div style={{ fontFamily: '"DM Sans", sans-serif', background: "#fff", minHeight: "100vh" }}>

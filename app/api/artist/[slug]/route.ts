@@ -44,8 +44,9 @@ export async function GET(_request: Request, { params }: { params: { slug: strin
 
     const seen = new Set<string>();
     const artworks = sorted.filter((row) => {
-      if (seen.has(row.id)) return false;
-      seen.add(row.id);
+      const key = `${row.title}::${row.image_url}::${row.artist_id}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
       return true;
     });
 
