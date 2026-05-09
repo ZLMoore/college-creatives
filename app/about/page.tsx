@@ -177,18 +177,17 @@ export default function MissionPage() {
                 Zakora Moore
               </h2>
               <p style={{ margin: "0 0 16px", fontSize: 16, lineHeight: 1.85, color: "var(--page-text)" }}>
-                Zakora Moore is an aspiring physician-scientist whose path has never fit neatly into one category.
-                Currently working in research and pursuing a career in medicine, she has spent years navigating spaces
-                that rarely make room for artists.
+                Zakora is an aspiring physician-scientist whose path has never fit neatly into one category. Currently
+                working in research and pursuing a career in medicine, she has spent years navigating spaces that rarely
+                make room for artistic expression.
               </p>
               <p style={{ margin: "0 0 16px", fontSize: 16, lineHeight: 1.85, color: "var(--page-text)" }}>
-                It was that tension that led her to build College Creatives. She wanted a place that acknowledged what
-                so many science and pre-professional students already know: that creativity does not disappear when you
-                choose a demanding field. It just goes looking for an outlet.
+                Her experiences led her to build College Creatives. She wanted a place that acknowledged what so many
+                science and pre-professional students already know: that creativity does not disappear when you choose a
+                demanding field. It just goes looking for an outlet.
               </p>
               <p style={{ margin: 0, fontSize: 16, lineHeight: 1.85, color: "var(--page-text)" }}>
-                College Creatives is that outlet. Built from scratch with a custom application process, print-on-demand
-                fulfillment through Printful, and direct artist payouts via Stripe.
+                College Creatives is that outlet.
               </p>
             </div>
           </div>
