@@ -55,11 +55,39 @@ export async function POST(request: Request) {
 
     if (error) throw error;
 
+    const applicantName = escapeHtml(String(name));
+    const applicantEmailHtml = `<p>Hi ${applicantName},</p>
+
+<p>Thanks for your interest in College Creatives! Here's exactly what happens next:</p>
+
+<p><strong>Step 1 — We review your application.</strong> Our founder personally reviews every submission. You'll hear back within 3–5 business days.</p>
+
+<p><strong>Step 2 — You get approved!</strong> Expect to receive a welcome email with a link to securely connect your payout account via Stripe. This is how you get paid.</p>
+
+<p><strong>Step 3 — You submit your work.</strong> Upload your pieces with a title, price, and medium. To ensure the best print quality, your image must be at least 3000 x 3000px at 300 DPI. Here's how to get there depending on your medium:</p>
+
+<ul>
+  <li><strong>Digital art</strong> — export at full resolution from Procreate, Photoshop, Illustrator, or your preferred tool.</li>
+  <li><strong>Painting or drawing</strong> — photograph in natural light with a steady hand or tripod, or scan at 600 DPI minimum. Use a free tool like Adobe Scan or Google PhotoScan.</li>
+  <li><strong>Photography</strong> — submit the original RAW or highest-resolution JPEG. Avoid heavy compression.</li>
+  <li><strong>Mixed media or collage</strong> — scan at 600 DPI or photograph flat on a neutral background with no shadows.</li>
+</ul>
+
+<p><strong>Step 4 — We review your art.</strong> We evaluate each piece for appropriateness and print-readiness. All submissions must meet our community standards and print quality requirements before going live. You'll be notified once your work is approved or if any changes are needed.</p>
+
+<p><strong>Step 5 — You earn passive income!</strong> Every time a print sells, you keep 90% of your markup. Printful handles all printing and shipping for you.</p>
+
+<p>Have questions? Reply to this email. We read every message!</p>
+
+<p>— The College Creatives Team</p>
+
+<a href="https://collegecreatives.store/apply" style="display:inline-block;background-color:#F5A623;color:#12172A;font-family:sans-serif;font-weight:bold;padding:14px 28px;border-radius:999px;text-decoration:none;margin-top:24px;">Become an Artist →</a>`;
+
     await resend.emails.send({
       from: "College Creatives <hello@collegecreatives.store>",
       to: emailNorm,
-      subject: "College Creatives Application Received",
-      html: `<p>Hi ${name},</p><p>Thanks for applying to College Creatives. Our curatorial team will review your application shortly.</p>`,
+      subject: "More About Us!",
+      html: applicantEmailHtml,
     });
 
     const portfolio =
