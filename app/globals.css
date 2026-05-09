@@ -1,9 +1,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap");
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
+  width: 100%;
+  min-height: 100%;
   overflow-x: hidden;
   max-width: 100%;
 }
@@ -20,8 +28,100 @@ body {
 @media (prefers-color-scheme: dark) {
   :root {
     --page-bg: #1a1f2e;
-    --page-text: #f7f4ef;
+    --page-text: #F7F4EF;
     --page-text-muted: rgba(247, 244, 239, 0.6);
     --page-border: rgba(247, 244, 239, 0.12);
+  }
+}
+
+/* Newsletter — shared by homepage and /about */
+.cc-newsletter {
+  background: #12172a;
+  padding: 64px 48px 72px;
+  text-align: center;
+  color: #fff;
+}
+.cc-newsletter-label {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  margin: 0 0 14px;
+}
+.cc-newsletter-heading {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #fff;
+  margin: 0 0 18px;
+  line-height: 1.15;
+}
+.cc-newsletter-heading .cc-newsletter-loop {
+  font-style: italic;
+  color: #f5a623;
+}
+.cc-newsletter-sub {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.75;
+  max-width: 560px;
+  margin: 0 auto 36px;
+}
+.cc-newsletter-form {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+  gap: 12px;
+  max-width: 560px;
+  margin: 0 auto;
+}
+.cc-newsletter-form input,
+.cc-newsletter-form button {
+  font-size: 14px;
+  font-family: "DM Sans", sans-serif;
+}
+.cc-newsletter-form input {
+  width: 320px;
+  max-width: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 0.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 14px 16px;
+  color: #fff;
+}
+.cc-newsletter-form input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+.cc-newsletter-form button {
+  flex: 0 0 auto;
+  background: #e8503a;
+  color: #fff;
+  border: none;
+  border-radius: 40px;
+  padding: 14px 28px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.cc-newsletter-form button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.cc-newsletter-feedback {
+  margin: 18px 0 0;
+  font-size: 14px;
+}
+.cc-newsletter-feedback.ok {
+  color: #3bafd4;
+}
+.cc-newsletter-feedback.err {
+  color: #e8503a;
+}
+
+@media (max-width: 900px) {
+  .cc-newsletter {
+    padding: 48px 20px 56px;
   }
 }

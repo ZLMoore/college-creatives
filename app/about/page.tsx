@@ -83,7 +83,7 @@ export default function MissionPage() {
       </section>
 
       <main style={{ maxWidth: 820, margin: "0 auto", padding: "3rem 2rem" }}>
-        <section style={{ maxWidth: 820, margin: "0 auto" }}>
+        <section>
           <p style={{ margin: "0 0 22px", fontSize: 18, lineHeight: 1.9, color: "var(--page-text)" }}>
             College Creatives began with a simple observation: many students pursuing rigorous academic paths quietly
             leave parts of themselves behind.
@@ -97,13 +97,12 @@ export default function MissionPage() {
           >
             <p
               style={{
-                margin: 0,
+                margin: "0 0 1rem",
                 fontFamily: '"Playfair Display", serif',
                 fontStyle: "italic",
                 fontSize: "24px",
                 lineHeight: 1.45,
                 color: "var(--page-text)",
-                marginBottom: "1rem",
               }}
             >
               &quot;College Creatives exists to celebrate the artistic side of students whose chosen
@@ -135,7 +134,7 @@ export default function MissionPage() {
           }}
         />
 
-        <section style={{ maxWidth: 820, margin: "64px 0 0" }}>
+        <section style={{ margin: "64px 0 0" }}>
           <div className="founder-grid">
             <div
               style={{
@@ -146,7 +145,6 @@ export default function MissionPage() {
                 alignSelf: "stretch",
               }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/images/about.png"
                 alt="Zakora Moore"
@@ -157,9 +155,7 @@ export default function MissionPage() {
             <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
               <p
                 style={{
-                  marginTop: 0,
-                  marginRight: 0,
-                  marginBottom: 10,
+                  margin: "0 0 10px",
                   fontSize: 11,
                   textTransform: "uppercase",
                   letterSpacing: "2px",
@@ -171,9 +167,7 @@ export default function MissionPage() {
               </p>
               <h2
                 style={{
-                  marginTop: 0,
-                  marginRight: 0,
-                  marginBottom: 28,
+                  margin: "0 0 28px",
                   fontFamily: '"Playfair Display", serif',
                   fontSize: "clamp(34px, 4vw, 46px)",
                   lineHeight: 1.1,
@@ -210,7 +204,7 @@ export default function MissionPage() {
         <p className="cc-newsletter-sub">
           New artists, new drops, and behind-the-scenes from the first marketplace built for student creators.
         </p>
-          <form className="cc-newsletter-form" onSubmit={onNewsletterSubmit}>
+        <form className="cc-newsletter-form" onSubmit={onNewsletterSubmit}>
           <input
             required
             type="email"
@@ -272,35 +266,9 @@ export default function MissionPage() {
 
         .founder-grid { display: flex; align-items: stretch; gap: 2.5rem; }
 
-        .cc-newsletter { background:#12172A; padding:64px 48px 72px; text-align:center; color:#fff; margin-top:4rem; font-family:"DM Sans",sans-serif; }
-        .cc-newsletter-label { font-family:"DM Mono",monospace; font-size:10px; letter-spacing:3px; color:rgba(255,255,255,.45); text-transform:uppercase; margin:0 0 14px; }
-        .cc-newsletter-heading { font-family:"Playfair Display",serif; font-size:clamp(28px,4vw,40px); font-weight:700; letter-spacing:-0.5px; color:#fff; margin:0 0 18px; line-height:1.15; }
-        .cc-newsletter-heading .cc-newsletter-loop { font-style:italic; color:#F5A623; }
-        .cc-newsletter-sub { font-family:"DM Sans",sans-serif; font-size:15px; color:rgba(255,255,255,.65); line-height:1.75; max-width:560px; margin:0 auto 36px; }
-        .cc-newsletter-form { display:flex; flex-direction:row; justify-content:center; align-items:stretch; gap:12px; max-width:560px; margin:0 auto; }
-        .cc-newsletter-form input { width:320px; max-width:100%; background:rgba(255,255,255,.06); border:0.5px solid rgba(255,255,255,.12); border-radius:8px; padding:14px 16px; font-size:14px; color:#fff; font-family:"DM Sans",sans-serif; }
-        .cc-newsletter-form input::placeholder { color:rgba(255,255,255,.35); }
-        .cc-newsletter-form button { flex:0 0 auto; background:#E8503A; color:#fff; border:none; border-radius:40px; padding:14px 28px; font-size:14px; font-weight:600; font-family:"DM Sans",sans-serif; cursor:pointer; }
-        .cc-newsletter-form button:disabled { opacity:.6; cursor:wait; }
-        .cc-newsletter-feedback { font-family:"DM Sans",sans-serif; margin:18px 0 0; font-size:14px; }
-        .cc-newsletter-feedback.ok { color:#3BAFD4; }
-        .cc-newsletter-feedback.err { color:#E8503A; }
-
         @media (max-width: 760px) {
           .founder-grid {
             flex-direction: column;
-          }
-          .cc-newsletter { padding:48px 20px 56px; }
-          .cc-newsletter-form {
-            flex-direction: column;
-            align-items: stretch;
-            max-width: 100%;
-          }
-          .cc-newsletter-form input {
-            width: 100%;
-          }
-          .cc-newsletter-form button {
-            width: 100%;
           }
         }
       `}</style>

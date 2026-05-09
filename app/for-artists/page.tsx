@@ -32,15 +32,16 @@ export default function ForArtistsPage() {
     maxWidth: "480px",
     marginLeft: "auto",
     marginRight: "auto",
-    boxSizing: "border-box",
   };
 
   return (
     <div
       style={{
-        minHeight: "100vh",
         margin: 0,
         padding: 0,
+        minHeight: "100vh",
+        width: "100%",
+        overflowX: "hidden",
         background: "#12172A",
         color: "#fff",
         fontFamily: '"DM Sans", sans-serif',
@@ -54,7 +55,6 @@ export default function ForArtistsPage() {
           max-width: 480px;
           margin-left: auto;
           margin-right: auto;
-          box-sizing: border-box;
           margin-top: 2px;
           background: #f5a623;
           color: #12172a;
@@ -179,7 +179,6 @@ export default function ForArtistsPage() {
                   fontFamily: '"DM Sans", sans-serif',
                   display: "block",
                   margin: "0 auto 12px",
-                  boxSizing: "border-box",
                 }}
               />
             </label>
