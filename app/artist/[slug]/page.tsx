@@ -1,7 +1,7 @@
 "use client";
 
 import { notFound, useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 import type { Artist, Artwork } from "@/lib/supabase";
 
@@ -58,7 +58,7 @@ export default function ArtistProfilePage() {
 
   if (loading || !payload) {
     return (
-      <div style={{ fontFamily: '"DM Sans", sans-serif', background: "#fff", minHeight: "100vh" }}>
+      <div style={{ fontFamily: '"DM Sans", sans-serif', background: "var(--page-bg)", minHeight: "100vh" }}>
         <SiteHeader />
         <div
           style={{
@@ -75,11 +75,20 @@ export default function ArtistProfilePage() {
     );
   }
 
-  const { artist, artworks } = payload;
+  const { artist, artworks: rawArtworks } = payload;
+  const artworks = useMemo(() => {
+    const seen = new Set<string>();
+    return rawArtworks.filter((row) => {
+      const key = `${row.title}::${row.image_url}::${row.artist_id}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [rawArtworks]);
   console.log("artworks count:", artworks.length);
 
   return (
-    <div style={{ fontFamily: '"DM Sans", sans-serif', background: "#fff", minHeight: "100vh" }}>
+    <div style={{ fontFamily: '"DM Sans", sans-serif', background: "var(--page-bg)", minHeight: "100vh" }}>
       <SiteHeader />
 
       {/* HERO */}
@@ -142,8 +151,8 @@ export default function ArtistProfilePage() {
           key={artwork.id}
           style={{
             padding: "80px 48px",
-            borderBottom: "0.5px solid #E8E4DE",
-            background: i % 2 === 0 ? "#FFFFFF" : "#F7F4EF",
+            borderBottom: "0.5px solid var(--page-border)",
+            background: "var(--page-bg)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -213,7 +222,7 @@ export default function ArtistProfilePage() {
                   fontFamily: '"Playfair Display", serif',
                   fontSize: "36px",
                   fontStyle: "italic",
-                  color: "#0E1018",
+                  color: "var(--page-text)",
                   marginBottom: "8px",
                   lineHeight: 1.2,
                 }}
@@ -223,7 +232,7 @@ export default function ArtistProfilePage() {
               <p style={{ fontSize: "20px", fontWeight: 500, color: "#E8503A", marginBottom: "32px" }}>
                 {artwork.price}
               </p>
-              <hr style={{ border: "none", borderTop: "0.5px solid #E0DDD8", marginBottom: "28px" }} />
+              <hr style={{ border: "none", borderTop: "0.5px solid var(--page-border)", marginBottom: "28px" }} />
               <p
                 style={{
                   fontFamily: '"DM Mono", monospace',
@@ -239,7 +248,7 @@ export default function ArtistProfilePage() {
               <p
                 style={{
                   fontSize: "15px",
-                  color: "#4a4a4a",
+                  color: "var(--page-text)",
                   lineHeight: 1.9,
                   fontStyle: "italic",
                   maxWidth: "560px",

@@ -102,7 +102,6 @@ const artists: Artist[] = [
 export default function Page() {
   const [filter, setFilter] = useState<"all" | "painting" | "print" | "abstract">("all");
   const [heroBgUrl, setHeroBgUrl] = useState("/images/sunset_college.png");
-  const [newsletterName, setNewsletterName] = useState("");
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "ok" | "err">("idle");
   const [newsletterLoading, setNewsletterLoading] = useState(false);
@@ -131,12 +130,11 @@ export default function Page() {
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: newsletterName, email: newsletterEmail }),
+        body: JSON.stringify({ name: "", email: newsletterEmail }),
       });
       setNewsletterLoading(false);
       if (res.ok) {
         setNewsletterStatus("ok");
-        setNewsletterName("");
         setNewsletterEmail("");
       } else {
         setNewsletterStatus("err");
@@ -179,7 +177,7 @@ export default function Page() {
 * { box-sizing: border-box; margin: 0; padding: 0; }
 :root { --navy:#12172A; --amber:#F5A623; --coral:#E8503A; --sky:#3BAFD4; --cream:#F7F4EF; --ink:#0E1018; --muted:#7A7670; --white:#FFFFFF; }
 html { scroll-behavior: smooth; }
-body { font-family: "DM Sans", sans-serif; background: var(--cream); color: var(--ink); overflow-x: hidden; }
+body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: var(--page-text); overflow-x: hidden; }
 
 .cc-hero { position:relative; width:100%; height:100vh; min-height:620px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
 .cc-hero-bg { position:absolute; inset:0; background-size: cover; background-position: center; background-repeat: no-repeat; }
@@ -192,9 +190,9 @@ body { font-family: "DM Sans", sans-serif; background: var(--cream); color: var(
 .cc-hero-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
 .cc-btn-amber { background:#F5A623; color:#12172A; padding:14px 32px; border-radius:40px; font-size:14px; font-weight:500; text-decoration:none; border:none; cursor:pointer; font-family:inherit; }
 .cc-btn-ghost { background:rgba(255,255,255,.1); color:rgba(255,255,255,.85); padding:14px 32px; border-radius:40px; font-size:14px; border:0.5px solid rgba(255,255,255,.25); text-decoration:none; font-family:inherit; }
-.cc-scroll-cue { position:absolute; bottom:28px; left:50%; transform:translateX(-50%); z-index:2; display:flex; flex-direction:column; align-items:center; gap:6px; }
-.cc-scroll-line { width:1px; height:36px; background:linear-gradient(rgba(255,255,255,.3),transparent); animation:scrollpulse 2s ease-in-out infinite; }
-.cc-scroll-text { font-family:"DM Mono",monospace; font-size:9px; letter-spacing:2px; color:rgba(255,255,255,.35); text-transform:uppercase; }
+.cc-scroll-cue { position:absolute; bottom:80px; left:50%; transform:translateX(-50%); z-index:2; display:flex; flex-direction:column; align-items:center; gap:10px; min-width:48px; min-height:48px; }
+.cc-scroll-line { width:2px; height:56px; background:linear-gradient(rgba(255,255,255,.3),transparent); animation:scrollpulse 2s ease-in-out infinite; }
+.cc-scroll-text { font-family:"DM Mono",monospace; font-size:12px; letter-spacing:2px; color:rgba(255,255,255,.35); text-transform:uppercase; }
 @keyframes scrollpulse { 0%,100%{opacity:.3} 50%{opacity:.8} }
 
 .cc-ticker { background:#E8503A; padding:10px 0; overflow:hidden; white-space:nowrap; }
@@ -206,7 +204,7 @@ body { font-family: "DM Sans", sans-serif; background: var(--cream); color: var(
 .cc-stats { display:grid; grid-template-columns:repeat(3,1fr); }
 .cc-stat { padding:32px 0; text-align:center; }
 .cc-stat-num { font-family:"Playfair Display",serif; font-size:40px; font-weight:700; }
-.cc-stat-label { font-size:11px; color:rgba(14,16,24,.5); text-transform:uppercase; letter-spacing:.8px; margin-top:4px; }
+.cc-stat-label { font-size:11px; color:var(--page-text-muted); text-transform:uppercase; letter-spacing:.8px; margin-top:4px; }
 .cc-stat.s1 { background:#F5A623; }
 .cc-stat.s1 .cc-stat-num { color:#12172A; }
 .cc-stat.s2 { background:#12172A; }
@@ -216,24 +214,24 @@ body { font-family: "DM Sans", sans-serif; background: var(--cream); color: var(
 .cc-stat.s3 .cc-stat-num { color:#fff; }
 .cc-stat.s3 .cc-stat-label { color:rgba(255,255,255,.55); }
 
-.cc-gallery { background:#FFFFFF; padding:64px 48px; overflow:visible; }
+.cc-gallery { background:var(--page-bg); padding:64px 48px; overflow:visible; }
 .cc-gallery-artist { overflow:visible; }
-.cc-gallery-eyebrow { font-family:"DM Mono",monospace; font-size:10px; letter-spacing:3px; color:#7A7670; text-transform:uppercase; margin-bottom:10px; }
+.cc-gallery-eyebrow { font-family:"DM Mono",monospace; font-size:10px; letter-spacing:3px; color:var(--page-text-muted); text-transform:uppercase; margin-bottom:10px; }
 .cc-gallery-title { font-family:"Playfair Display",serif; font-size:38px; font-weight:700; letter-spacing:-1px; }
 .cc-filters { display:flex; gap:10px; margin-top:22px; margin-bottom:40px; flex-wrap:wrap; }
-.cc-filter-pill { padding:7px 16px; border-radius:40px; font-size:11px; font-weight:500; border:0.5px solid #ddd; background:transparent; color:#7A7670; cursor:pointer; font-family:inherit; }
+.cc-filter-pill { padding:7px 16px; border-radius:40px; font-size:11px; font-weight:500; border:0.5px solid var(--page-border); background:transparent; color:var(--page-text-muted); cursor:pointer; font-family:inherit; }
 .cc-filter-pill.active { background:#12172A; color:#fff; }
 
 .cc-artist-row { margin-bottom:72px; overflow:visible; }
-.cc-artist-meta { display:flex; align-items:baseline; justify-content:space-between; padding-bottom:18px; border-bottom:0.5px solid #E0DDD8; margin-bottom:30px; overflow:visible; }
+.cc-artist-meta { display:flex; align-items:baseline; justify-content:space-between; padding-bottom:18px; border-bottom:0.5px solid var(--page-border); margin-bottom:30px; overflow:visible; }
 .cc-artist-idx { font-family:"DM Mono",monospace; font-size:10px; color:#ccc; letter-spacing:2px; margin-bottom:6px; }
-.cc-artist-name { font-family:"Playfair Display",serif; font-size:32px; font-weight:700; letter-spacing:-0.8px; color:#0E1018; text-decoration:none; }
+.cc-artist-name { font-family:"Playfair Display",serif; font-size:32px; font-weight:700; letter-spacing:-0.8px; color:var(--page-text); text-decoration:none; }
 .cc-artist-name:hover { color:#E8503A; }
 .cc-artist-badge { font-size:9px; font-weight:500; padding:3px 10px; border-radius:3px; text-transform:uppercase; letter-spacing:.8px; margin-left:10px; vertical-align:middle; }
-.cc-artist-school { font-size:12px; color:#7A7670; margin-top:4px; }
+.cc-artist-school { font-size:12px; color:var(--page-text-muted); margin-top:4px; }
 .cc-artist-right { text-align:right; }
 .cc-artist-sales { font-family:"Playfair Display",serif; font-size:28px; font-weight:700; color:#F5A623; }
-.cc-artist-soldlbl { font-size:10px; color:#7A7670; text-transform:uppercase; letter-spacing:.5px; }
+.cc-artist-soldlbl { font-size:10px; color:var(--page-text-muted); text-transform:uppercase; letter-spacing:.5px; }
 .cc-artist-profile { font-size:12px; color:#E8503A; font-weight:500; background:none; border:none; margin-top:6px; display:block; text-align:right; cursor:pointer; font-family:inherit; text-decoration:none; }
 .cc-art-strip-outer { overflow:visible; }
 .cc-art-strip { display:flex; align-items:flex-end; gap:40px; overflow-x:auto; overflow-y:visible; padding-top:16px; padding-bottom:14px; -webkit-overflow-scrolling:touch; }
@@ -241,10 +239,10 @@ body { font-family: "DM Sans", sans-serif; background: var(--cream); color: var(
 .cc-art-piece:hover { transform:translateY(-12px); }
 .cc-art-piece img { display:block; border-radius:2px; box-shadow:0 32px 80px rgba(0,0,0,.22), 0 14px 36px rgba(0,0,0,.14), 0 4px 12px rgba(0,0,0,.1); max-height:360px; width:auto; height:auto; object-fit:contain; }
 .cc-art-cap { margin-top:16px; }
-.cc-art-title { font-family:"Playfair Display",serif; font-size:14px; font-style:italic; color:#0E1018; }
+.cc-art-title { font-family:"Playfair Display",serif; font-size:14px; font-style:italic; color:var(--page-text); }
 .cc-art-price { font-size:13px; font-weight:500; color:#E8503A; margin-top:3px; }
-.cc-art-payout { font-size:11px; color:#7A7670; font-family:"DM Mono",monospace; margin-top:2px; }
-.cc-row-sep { height:0.5px; background:#E8E4DE; margin-bottom:72px; }
+.cc-art-payout { font-size:11px; color:var(--page-text-muted); font-family:"DM Mono",monospace; margin-top:2px; }
+.cc-row-sep { height:0.5px; background:var(--page-border); margin-bottom:72px; }
 
 .cc-featured { display:grid; grid-template-columns:1fr 1fr; min-height:400px; }
 .cc-feat-left { background:#3BAFD4; padding:52px; color:#fff; display:flex; flex-direction:column; justify-content:space-between; }
@@ -265,29 +263,29 @@ body { font-family: "DM Sans", sans-serif; background: var(--cream); color: var(
 .cc-process-steps .cc-step-num { width:28px; height:28px; border-radius:50%; background:#12172A; color:#F5A623; font-size:12px; font-family:"Playfair Display",serif; display:flex; align-items:center; justify-content:center; flex-shrink:0; line-height:1; }
 .cc-process-steps .cc-step-title { font-size:14px; color:#12172A; font-weight:500; margin-bottom:4px; }
 .cc-process-steps .cc-step-desc { font-size:12px; color:rgba(18,23,42,.55); line-height:1.5; }
-.cc-mission-right { background:#F7F4EF; padding:52px; text-align:center; display:flex; flex-direction:column; align-items:center; }
+.cc-mission-right { background:var(--page-bg); padding:52px; text-align:center; display:flex; flex-direction:column; align-items:center; }
 .cc-more-inner { width:100%; max-width:520px; margin:0 auto; }
-.cc-more-label { font-family:"DM Mono",monospace; font-size:10px; letter-spacing:3px; color:#7A7670; text-transform:uppercase; margin:0 0 14px; }
-.cc-more-h { font-family:"Playfair Display",serif; font-size:42px; font-weight:700; letter-spacing:-1px; color:#12172A; line-height:1.08; margin:0 0 16px; }
-.cc-more-sub { font-size:15px; color:#7A7670; line-height:1.75; margin:0 0 24px; }
+.cc-more-label { font-family:"DM Mono",monospace; font-size:10px; letter-spacing:3px; color:var(--page-text-muted); text-transform:uppercase; margin:0 0 14px; }
+.cc-more-h { font-family:"Playfair Display",serif; font-size:42px; font-weight:700; letter-spacing:-1px; color:var(--page-text); line-height:1.08; margin:0 0 16px; }
+.cc-more-sub { font-size:15px; color:var(--page-text-muted); line-height:1.75; margin:0 0 24px; }
 .cc-more-form { width:100%; display:grid; gap:14px; text-align:left; }
 .cc-more-fields { display:flex; flex-direction:row; flex-wrap:wrap; gap:12px; width:100%; }
 .cc-more-fields label { flex:1 1 200px; min-width:0; display:grid; gap:6px; }
-.cc-more-field-lbl { font-family:"DM Mono",monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:#7A7670; }
+.cc-more-field-lbl { font-family:"DM Mono",monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--page-text-muted); }
 .cc-more-fields input { padding:12px 14px; border-radius:8px; border:0.5px solid #ddd; font-size:14px; font-family:"DM Sans",sans-serif; width:100%; box-sizing:border-box; }
 .cc-more-form > button { width:100%; background:#12172A; color:#fff; border:none; border-radius:40px; padding:14px 24px; font-size:14px; font-weight:500; cursor:pointer; font-family:"DM Sans",sans-serif; }
 .cc-more-form > button:disabled { opacity:.6; cursor:wait; }
-.cc-more-status { margin:0; font-size:14px; color:#12172A; }
+.cc-more-status { margin:0; font-size:14px; color:var(--page-text); }
 
 .cc-newsletter { background:#12172A; padding:64px 48px 72px; text-align:center; color:#fff; }
 .cc-newsletter-label { font-family:"DM Mono",monospace; font-size:10px; letter-spacing:3px; color:rgba(255,255,255,.45); text-transform:uppercase; margin:0 0 14px; }
 .cc-newsletter-heading { font-family:"Playfair Display",serif; font-size:clamp(28px,4vw,40px); font-weight:700; letter-spacing:-0.5px; color:#fff; margin:0 0 18px; line-height:1.15; }
 .cc-newsletter-heading .cc-newsletter-loop { font-style:italic; color:#F5A623; }
 .cc-newsletter-sub { font-size:15px; color:rgba(255,255,255,.65); line-height:1.75; max-width:560px; margin:0 auto 36px; }
-.cc-newsletter-form { display:flex; flex-direction:row; flex-wrap:wrap; justify-content:center; align-items:stretch; gap:12px; max-width:720px; margin:0 auto; }
-.cc-newsletter-form input { flex:1 1 180px; min-width:0; background:rgba(255,255,255,.06); border:0.5px solid rgba(255,255,255,.12); border-radius:8px; padding:14px 16px; font-size:14px; color:#fff; font-family:"DM Sans",sans-serif; }
+.cc-newsletter-form { display:flex; flex-direction:row; justify-content:center; align-items:stretch; gap:12px; max-width:560px; margin:0 auto; }
+.cc-newsletter-form input { width:320px; max-width:100%; background:rgba(255,255,255,.06); border:0.5px solid rgba(255,255,255,.12); border-radius:8px; padding:14px 16px; font-size:14px; color:#fff; font-family:"DM Sans",sans-serif; }
 .cc-newsletter-form input::placeholder { color:rgba(255,255,255,.35); }
-.cc-newsletter-form button { flex:0 0 auto; background:#F5A623; color:#12172A; border:none; border-radius:40px; padding:14px 28px; font-size:14px; font-weight:600; font-family:"DM Sans",sans-serif; cursor:pointer; }
+.cc-newsletter-form button { flex:0 0 auto; background:#E8503A; color:#fff; border:none; border-radius:40px; padding:14px 28px; font-size:14px; font-weight:600; font-family:"DM Sans",sans-serif; cursor:pointer; }
 .cc-newsletter-form button:disabled { opacity:.6; cursor:wait; }
 .cc-newsletter-feedback { margin:18px 0 0; font-size:14px; }
 .cc-newsletter-feedback.ok { color:#3BAFD4; }
@@ -552,16 +550,6 @@ body { font-family: "DM Sans", sans-serif; background: var(--cream); color: var(
           New artists, new drops, and behind-the-scenes from the first marketplace built for student creators.
         </p>
         <form className="cc-newsletter-form" onSubmit={onNewsletterSubmit}>
-          <input
-            required
-            type="text"
-            name="name"
-            autoComplete="name"
-            placeholder="Name"
-            value={newsletterName}
-            onChange={(ev) => setNewsletterName(ev.target.value)}
-            aria-label="Name"
-          />
           <input
             required
             type="email"

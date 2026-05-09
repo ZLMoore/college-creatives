@@ -73,14 +73,14 @@ export const SiteHeader = () => (
       </Link>
 
       <div style={{ ...centeredLinksStyle, pointerEvents: "none" }}>
+        <Link href="/about" style={{ ...linkStyle, pointerEvents: "auto" }}>
+          About
+        </Link>
         <Link href="/#gallery" prefetch={false} style={{ ...linkStyle, pointerEvents: "auto" }}>
           Gallery
         </Link>
         <Link href="/for-artists" style={{ ...linkStyle, pointerEvents: "auto" }}>
-          For Artists
-        </Link>
-        <Link href="/#mission" prefetch={false} style={{ ...linkStyle, pointerEvents: "auto" }}>
-          About
+          Artist Portal
         </Link>
       </div>
 
