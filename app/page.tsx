@@ -350,20 +350,6 @@ body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: va
 .cc-more-form > button:disabled { opacity:.6; cursor:wait; }
 .cc-more-status { margin:0; font-size:14px; color:var(--page-text); }
 
-.cc-newsletter { background:#12172A; padding:64px 48px 72px; text-align:center; color:#fff; }
-.cc-newsletter-label { font-family:"DM Mono",monospace; font-size:10px; letter-spacing:3px; color:rgba(255,255,255,.45); text-transform:uppercase; margin:0 0 14px; }
-.cc-newsletter-heading { font-family:"Playfair Display",serif; font-size:clamp(28px,4vw,40px); font-weight:700; letter-spacing:-0.5px; color:#fff; margin:0 0 18px; line-height:1.15; }
-.cc-newsletter-heading .cc-newsletter-loop { font-style:italic; color:#F5A623; }
-.cc-newsletter-sub { font-size:15px; color:rgba(255,255,255,.65); line-height:1.75; max-width:560px; margin:0 auto 36px; }
-.cc-newsletter-form { display:flex; flex-direction:row; justify-content:center; align-items:stretch; gap:12px; max-width:560px; margin:0 auto; }
-.cc-newsletter-form input { width:320px; max-width:100%; background:rgba(255,255,255,.06); border:0.5px solid rgba(255,255,255,.12); border-radius:8px; padding:14px 16px; font-size:14px; color:#fff; font-family:"DM Sans",sans-serif; }
-.cc-newsletter-form input::placeholder { color:rgba(255,255,255,.35); }
-.cc-newsletter-form button { flex:0 0 auto; background:#E8503A; color:#fff; border:none; border-radius:40px; padding:14px 28px; font-size:14px; font-weight:600; font-family:"DM Sans",sans-serif; cursor:pointer; }
-.cc-newsletter-form button:disabled { opacity:.6; cursor:wait; }
-.cc-newsletter-feedback { margin:18px 0 0; font-size:14px; }
-.cc-newsletter-feedback.ok { color:#3BAFD4; }
-.cc-newsletter-feedback.err { color:#E8503A; }
-
 .cc-footer { background:#080C14; padding:24px 48px; display:flex; justify-content:space-between; align-items:center; }
 .cc-footer-left { font-family:"Playfair Display",serif; font-size:15px; color:rgba(255,255,255,.3); }
 .cc-footer-right { font-size:11px; color:rgba(255,255,255,.2); }
@@ -377,7 +363,6 @@ body { font-family: "DM Sans", sans-serif; background: var(--page-bg); color: va
   .cc-artist-meta { flex-direction:column; gap:16px; }
   .cc-artist-right { text-align:left; }
   .cc-artist-profile { text-align:left; }
-  .cc-newsletter { padding:48px 20px 56px; }
 }
 `;
 
