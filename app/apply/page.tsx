@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { isEduEmail } from "@/lib/edu";
 import { MEDIUM_OPTIONS } from "@/lib/medium-options";
@@ -16,11 +16,33 @@ const initial = {
   bio: "",
 };
 
+const APPLY_NAV_HEIGHT_PX = 58;
+
+function applyHeroImageFor(isDark: boolean, isWinter: boolean): string {
+  if (isWinter) {
+    return isDark ? "/images/night_college_snow_aerial.png" : "/images/day_college_snow_aerial.png";
+  }
+  return isDark ? "/images/night_college_aerial.png" : "/images/sunset_college_aerial.png";
+}
+
 export default function ApplyPage() {
   const [form, setForm] = useState(initial);
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
+  const [applyHeroBgUrl, setApplyHeroBgUrl] = useState("/images/sunset_college_aerial.png");
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const sync = () => {
+      const month = new Date().getMonth() + 1;
+      const isWinter = month === 12 || month === 1 || month === 2;
+      setApplyHeroBgUrl(applyHeroImageFor(mq.matches, isWinter));
+    };
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -59,8 +81,11 @@ export default function ApplyPage() {
       style={{
         margin: 0,
         padding: 0,
-        border: "none",
+        width: "100%",
         minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        border: "none",
         background: "#12172A",
         color: "#fff",
         fontFamily: '"DM Sans", sans-serif',
@@ -68,22 +93,31 @@ export default function ApplyPage() {
     >
       <SiteHeader />
 
-      <main style={{ background: "#12172A" }}>
-        <div
-          style={{
-            maxWidth: 1120,
-            margin: "0 auto",
-            padding: "56px 48px 80px",
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
-            gap: "clamp(32px, 5vw, 72px)",
-            alignItems: "start",
-          }}
-          className="apply-two-col"
-        >
-          <style>{`
+      <main
+        className="apply-split"
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "row",
+          width: "100%",
+          minHeight: `calc(100vh - ${APPLY_NAV_HEIGHT_PX}px)`,
+          margin: 0,
+          padding: 0,
+          background: "#12172A",
+          alignItems: "stretch",
+        }}
+      >
+        <style>{`
             @media (max-width: 900px) {
-              .apply-two-col { grid-template-columns: 1fr !important; padding-left: 24px !important; padding-right: 24px !important; }
+              .apply-split { flex-direction: column !important; }
+              .apply-left-col {
+                width: 100% !important;
+                min-height: 45vh !important;
+              }
+              .apply-right-col {
+                width: 100% !important;
+                padding: 56px 24px 80px !important;
+              }
             }
             .apply-form-field:focus,
             .apply-form-field:focus-visible {
@@ -114,46 +148,94 @@ export default function ApplyPage() {
               opacity: 0.6;
             }
           `}</style>
-          <div style={{ textAlign: "left", paddingTop: 8 }}>
-            <p
+          <div
+            className="apply-left-col"
+            style={{
+              position: "relative",
+              width: "50%",
+              minHeight: "100%",
+              margin: 0,
+              padding: 0,
+              flexShrink: 0,
+              backgroundImage: `url('${applyHeroBgUrl}')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <div
+              aria-hidden
               style={{
-                fontFamily: '"DM Mono", monospace',
-                fontSize: 11,
-                letterSpacing: 3,
-                color: "#3BAFD4",
-                textTransform: "uppercase",
-                margin: "0 0 14px",
+                position: "absolute",
+                inset: 0,
+                background: "rgba(18,23,42,0.5)",
+              }}
+            />
+            <div
+              style={{
+                position: "relative",
+                zIndex: 1,
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
               }}
             >
-              FOR ARTISTS
-            </p>
-            <h1
-              style={{
-                margin: "0 0 20px",
-                fontFamily: '"Playfair Display", serif',
-                fontSize: "clamp(32px, 4.2vw, 48px)",
-                fontWeight: 700,
-                letterSpacing: "-1px",
-                lineHeight: 1.08,
-                color: "#fff",
-              }}
-            >
-              Ready to sell your{" "}
-              <span style={{ fontStyle: "italic", color: "#F5A623" }}>art?</span>
-            </h1>
-            <p
-              style={{
-                margin: 0,
-                fontSize: 15,
-                lineHeight: 1.75,
-                color: "rgba(255,255,255,.72)",
-                maxWidth: 440,
-              }}
-            >
-              We handle printing, shipping, payments, and the storefront. You set your price, we take 10% commission — you keep the rest of your markup.
-            </p>
+              <p
+                style={{
+                  fontFamily: '"DM Mono", monospace',
+                  fontSize: 11,
+                  letterSpacing: 3,
+                  color: "#F5A623",
+                  textTransform: "uppercase",
+                  margin: "0 0 14px",
+                }}
+              >
+                Application
+              </p>
+              <h1
+                style={{
+                  margin: "0 0 20px",
+                  fontFamily: '"Playfair Display", serif',
+                  fontSize: "clamp(32px, 4.2vw, 48px)",
+                  fontWeight: 700,
+                  letterSpacing: "-1px",
+                  lineHeight: 1.08,
+                  color: "#fff",
+                }}
+              >
+                Ready to sell your{" "}
+                <span style={{ fontStyle: "italic", color: "#E8503A" }}>art?</span>
+              </h1>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 15,
+                  lineHeight: 1.75,
+                  color: "rgba(255,255,255,.72)",
+                  maxWidth: 440,
+                }}
+              >
+                We handle printing, shipping, and payments. You set your price and keep 90% of your markup.
+              </p>
+            </div>
           </div>
 
+          <div
+            className="apply-right-col"
+            style={{
+              width: "50%",
+              minWidth: 0,
+              flexShrink: 0,
+              margin: 0,
+              padding: "56px 48px 80px",
+              boxSizing: "border-box",
+              background: "#12172A",
+            }}
+          >
           <form
             onSubmit={onSubmit}
             style={{
@@ -260,7 +342,7 @@ export default function ApplyPage() {
               You will earn 90% of your markup on every sale. We take a 10% commission to keep the platform running.
             </p>
           </form>
-        </div>
+          </div>
       </main>
 
       <footer
