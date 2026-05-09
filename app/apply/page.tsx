@@ -1,0 +1,277 @@
+"use client";
+
+import type { CSSProperties } from "react";
+import { FormEvent, useState } from "react";
+import { SiteHeader } from "@/components/site-header";
+import { isEduEmail } from "@/lib/edu";
+
+const initial = {
+  name: "",
+  email: "",
+  school: "",
+  major: "",
+  medium: "",
+  portfolio_url: "",
+  bio: "",
+};
+
+export default function ApplyPage() {
+  const [form, setForm] = useState(initial);
+  const [error, setError] = useState("");
+  const [status, setStatus] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setStatus("");
+    if (!isEduEmail(form.email)) {
+      setError("Please use a valid .edu university email.");
+      return;
+    }
+    setLoading(true);
+    const res = await fetch("/api/apply", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: form.name,
+        email: form.email.trim().toLowerCase(),
+        school: form.school,
+        major: form.major,
+        medium: form.medium,
+        bio: form.bio,
+        portfolio_url: form.portfolio_url || null,
+      }),
+    });
+    const data = await res.json();
+    setLoading(false);
+    if (!res.ok) {
+      setError(data.error ?? "Application failed.");
+      return;
+    }
+    setForm(initial);
+    setStatus("Application received. Check your email for confirmation.");
+  };
+
+  return (
+    <div
+      style={{
+        margin: 0,
+        padding: 0,
+        border: "none",
+        minHeight: "100vh",
+        background: "#12172A",
+        color: "#fff",
+        fontFamily: '"DM Sans", sans-serif',
+      }}
+    >
+      <SiteHeader />
+
+      <main style={{ background: "#12172A" }}>
+        <div
+          style={{
+            maxWidth: 1120,
+            margin: "0 auto",
+            padding: "56px 48px 80px",
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+            gap: "clamp(32px, 5vw, 72px)",
+            alignItems: "start",
+          }}
+          className="apply-two-col"
+        >
+          <style>{`
+            @media (max-width: 900px) {
+              .apply-two-col { grid-template-columns: 1fr !important; padding-left: 24px !important; padding-right: 24px !important; }
+            }
+          `}</style>
+          <div style={{ textAlign: "left", paddingTop: 8 }}>
+            <p
+              style={{
+                fontFamily: '"DM Mono", monospace',
+                fontSize: 11,
+                letterSpacing: 3,
+                color: "#3BAFD4",
+                textTransform: "uppercase",
+                margin: "0 0 14px",
+              }}
+            >
+              FOR ARTISTS
+            </p>
+            <h1
+              style={{
+                margin: "0 0 20px",
+                fontFamily: '"Playfair Display", serif',
+                fontSize: "clamp(32px, 4.2vw, 48px)",
+                fontWeight: 700,
+                letterSpacing: "-1px",
+                lineHeight: 1.08,
+                color: "#fff",
+              }}
+            >
+              Ready to sell your{" "}
+              <span style={{ fontStyle: "italic", color: "#F5A623" }}>art?</span>
+            </h1>
+            <p
+              style={{
+                margin: 0,
+                fontSize: 15,
+                lineHeight: 1.75,
+                color: "rgba(255,255,255,.72)",
+                maxWidth: 440,
+              }}
+            >
+              We handle printing, shipping, payments, and the storefront. You set your price, we take 10% commission — you keep the rest of your markup.
+            </p>
+          </div>
+
+          <form
+            onSubmit={onSubmit}
+            style={{
+              width: "100%",
+              minWidth: 0,
+              padding: 0,
+              display: "grid",
+              gap: 16,
+            }}
+          >
+            <label style={labelBlock}>
+              <span style={labelText}>Full Name</span>
+              <input
+                required
+                value={form.name}
+                onChange={(ev) => setForm((p) => ({ ...p, name: ev.target.value }))}
+                placeholder="Your full name"
+                style={inputStyle}
+              />
+            </label>
+            <label style={labelBlock}>
+              <span style={labelText}>University Email (.edu required)</span>
+              <input
+                required
+                type="email"
+                value={form.email}
+                onChange={(ev) => setForm((p) => ({ ...p, email: ev.target.value }))}
+                placeholder="you@university.edu"
+                style={inputStyle}
+              />
+            </label>
+            <label style={labelBlock}>
+              <span style={labelText}>School</span>
+              <input
+                required
+                value={form.school}
+                onChange={(ev) => setForm((p) => ({ ...p, school: ev.target.value }))}
+                placeholder="e.g. Boston University"
+                style={inputStyle}
+              />
+            </label>
+            <label style={labelBlock}>
+              <span style={labelText}>Major</span>
+              <input
+                required
+                value={form.major}
+                onChange={(ev) => setForm((p) => ({ ...p, major: ev.target.value }))}
+                placeholder="e.g. Fine Arts"
+                style={inputStyle}
+              />
+            </label>
+            <label style={labelBlock}>
+              <span style={labelText}>Medium / Style</span>
+              <input
+                required
+                value={form.medium}
+                onChange={(ev) => setForm((p) => ({ ...p, medium: ev.target.value }))}
+                placeholder="e.g. Oil painting, printmaking, digital"
+                style={inputStyle}
+              />
+            </label>
+            <label style={labelBlock}>
+              <span style={labelText}>Portfolio Link (optional)</span>
+              <input
+                type="text"
+                value={form.portfolio_url}
+                onChange={(ev) => setForm((p) => ({ ...p, portfolio_url: ev.target.value }))}
+                placeholder="Instagram, Behance, personal site"
+                style={inputStyle}
+              />
+            </label>
+            <label style={labelBlock}>
+              <span style={labelText}>Tell us about your work</span>
+              <textarea
+                required
+                rows={5}
+                value={form.bio}
+                onChange={(ev) => setForm((p) => ({ ...p, bio: ev.target.value }))}
+                placeholder="What inspires you?"
+                style={{ ...inputStyle, resize: "vertical", minHeight: 120 }}
+              />
+            </label>
+            {error ? <p style={{ margin: 0, color: "#E8503A", fontSize: 14 }}>{error}</p> : null}
+            {status ? <p style={{ margin: 0, color: "#3BAFD4", fontSize: 14 }}>{status}</p> : null}
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                marginTop: 4,
+                width: "100%",
+                background: "#F5A623",
+                color: "#12172A",
+                border: "none",
+                borderRadius: 40,
+                padding: 14,
+                fontSize: 14,
+                fontWeight: 600,
+                cursor: loading ? "wait" : "pointer",
+              }}
+            >
+              {loading ? "Submitting…" : "Submit application"}
+            </button>
+            <p style={{ margin: "4px 0 0", fontSize: 12, lineHeight: 1.65, color: "rgba(255,255,255,.45)", textAlign: "left" }}>
+              You will earn 90% of your markup on every sale. We take a 10% commission to keep the platform running.
+            </p>
+          </form>
+        </div>
+      </main>
+
+      <footer
+        style={{
+          background: "#080C14",
+          padding: "24px 48px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 12,
+          flexWrap: "wrap",
+        }}
+      >
+        <span style={{ fontFamily: '"Playfair Display", serif', fontSize: 15, color: "rgba(255,255,255,.3)" }}>
+          College Creatives
+        </span>
+        <span style={{ fontSize: 11, color: "rgba(255,255,255,.2)" }}>© 2025 · collegecreatives.store</span>
+      </footer>
+    </div>
+  );
+}
+
+const labelBlock: CSSProperties = { display: "grid", gap: 8 };
+
+const labelText: CSSProperties = {
+  fontFamily: '"DM Mono", monospace',
+  fontSize: 10,
+  color: "rgba(255,255,255,0.35)",
+  textTransform: "uppercase",
+  letterSpacing: 1,
+};
+
+const inputStyle: CSSProperties = {
+  background: "rgba(255,255,255,0.06)",
+  border: "0.5px solid rgba(255,255,255,0.1)",
+  borderRadius: 8,
+  padding: "12px 16px",
+  fontSize: 13,
+  color: "#fff",
+  width: "100%",
+  fontFamily: '"DM Sans", sans-serif',
+  boxSizing: "border-box",
+};
