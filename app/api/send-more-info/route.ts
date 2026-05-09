@@ -1,5 +1,12 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { NextResponse } from "next/server";
 import { resend } from "@/lib/resend";
+
+function ccLogoPngDataUri(): string {
+  const buf = readFileSync(join(process.cwd(), "public", "images", "CC_logo.png"));
+  return `data:image/png;base64,${buf.toString("base64")}`;
+}
 
 export async function POST(request: Request) {
   try {
@@ -12,6 +19,7 @@ export async function POST(request: Request) {
     }
 
     const applyUrl = "https://collegecreatives.store/apply";
+    const logoDataUri = ccLogoPngDataUri();
 
     const html = `
 <!DOCTYPE html>
@@ -23,7 +31,7 @@ export async function POST(request: Request) {
       <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border-radius:12px;overflow:hidden;box-shadow:0 24px 60px rgba(18,23,42,0.12);">
         <tr>
           <td style="background:#12172A;padding:28px 32px;display:flex;align-items:center;gap:12px;">
-            <img src="https://collegecreatives.store/images/CC_logo.png" alt="College Creatives logo" style="height:36px;width:auto;display:inline-block;vertical-align:middle;margin-right:12px;" />
+            <img src="${logoDataUri}" alt="College Creatives logo" style="height:36px;width:auto;display:inline-block;vertical-align:middle;margin-right:12px;" />
             <p style="margin:0;display:inline-block;font-family:Georgia,serif;font-size:22px;color:#FFFFFF;vertical-align:middle;">College <span style="color:#F5A623;">Creatives</span></p>
           </td>
         </tr>
