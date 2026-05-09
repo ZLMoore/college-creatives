@@ -78,8 +78,13 @@ export default function MissionPage() {
         </h1>
       </section>
 
-      <main style={{ maxWidth: 900, margin: "0 auto", padding: "3rem 2rem" }}>
-        <section style={{ maxWidth: 600, margin: "0 auto" }}>
+      <div className="cc-about-scroll" aria-hidden>
+        <span className="cc-about-scroll-text">Scroll</span>
+        <span className="cc-about-scroll-chevron" />
+      </div>
+
+      <main style={{ maxWidth: 820, margin: "0 auto", padding: "3rem 2rem" }}>
+        <section style={{ maxWidth: 820, margin: "0 auto" }}>
           <div style={{ width: 40, height: 2, background: "#E8503A", marginBottom: 30 }} />
           <p style={{ margin: "0 0 22px", fontSize: 18, lineHeight: 1.9, color: "var(--page-text)" }}>
             College Creatives began with a simple observation: many students pursuing rigorous academic paths quietly
@@ -90,7 +95,7 @@ export default function MissionPage() {
             central to their identity. What was missing was a space where both could exist together without compromise.
           </p>
           <section
-            style={{ maxWidth: 680, margin: "28px auto 2rem", paddingLeft: 18, borderLeft: "3px solid #F5A623" }}
+            style={{ maxWidth: 820, margin: "28px auto 2rem", paddingLeft: 18, borderLeft: "3px solid #F5A623" }}
           >
             <p
               style={{
@@ -128,7 +133,7 @@ export default function MissionPage() {
           }}
         />
 
-        <section style={{ maxWidth: 980, margin: "64px 0 0" }}>
+        <section style={{ maxWidth: 820, margin: "64px 0 0" }}>
           <div className="founder-grid">
             <div style={{ width: 320, flexShrink: 0, display: "flex", alignSelf: "stretch" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -218,6 +223,43 @@ export default function MissionPage() {
       </section>
 
       <style>{`
+        .cc-about-scroll {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 1.5rem 0;
+          background: #e8503a;
+        }
+        .cc-about-scroll-text {
+          font-family: "DM Mono", monospace;
+          font-size: 12px;
+          letter-spacing: 2px;
+          color: rgba(247, 244, 239, 0.45);
+          text-transform: uppercase;
+        }
+        .cc-about-scroll-chevron {
+          margin-top: 10px;
+          display: block;
+          width: 10px;
+          height: 10px;
+          border-right: 2px solid rgba(247, 244, 239, 0.45);
+          border-bottom: 2px solid rgba(247, 244, 239, 0.45);
+          transform: rotate(45deg);
+          animation: cc-about-scroll-nudge 2s ease-in-out infinite;
+        }
+        @keyframes cc-about-scroll-nudge {
+          0%,
+          100% {
+            transform: rotate(45deg) translate(0, 0);
+            opacity: 0.45;
+          }
+          50% {
+            transform: rotate(45deg) translate(3px, 3px);
+            opacity: 0.9;
+          }
+        }
+
         .founder-grid { display: flex; align-items: stretch; gap: 2.5rem; }
 
         .cc-newsletter { background:#12172A; padding:64px 48px 72px; text-align:center; color:#fff; margin-top:4rem; }
