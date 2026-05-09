@@ -55,7 +55,7 @@ export async function POST(request: Request) {
 </html>`;
 
     await resend.emails.send({
-      from: "onboarding@resend.dev",
+      from: "College Creatives <hello@collegecreatives.store>",
       to: email,
       subject: "More about College Creatives",
       html,

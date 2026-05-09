@@ -29,7 +29,7 @@ export async function POST(request: Request) {
 <p>${escapeHtml(suggestion).replace(/\n/g, "<br />")}</p>`;
 
     await resend.emails.send({
-      from: "onboarding@resend.dev",
+      from: "College Creatives <hello@collegecreatives.store>",
       to: "contact@collegecreatives.store",
       subject: `Curator Note Edit Request — ${artworkTitle}`,
       html,

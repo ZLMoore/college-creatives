@@ -56,7 +56,7 @@ export async function POST(request: Request) {
     if (error) throw error;
 
     await resend.emails.send({
-      from: "onboarding@resend.dev",
+      from: "College Creatives <hello@collegecreatives.store>",
       to: emailNorm,
       subject: "College Creatives Application Received",
       html: `<p>Hi ${name},</p><p>Thanks for applying to College Creatives. Our curatorial team will review your application shortly.</p>`,
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
 
     try {
       await resend.emails.send({
-        from: "onboarding@resend.dev",
+        from: "College Creatives <hello@collegecreatives.store>",
         to: "contact@collegecreatives.store",
         subject: `New Artist Application — ${name}`,
         html: adminHtml,
