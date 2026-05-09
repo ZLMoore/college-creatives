@@ -42,13 +42,25 @@ export async function GET(_request: Request, { params }: { params: { slug: strin
       return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
     });
 
-    const seen = new Set<string>();
-    const artworks = sorted.filter((row) => {
-      const key = `${row.title}::${row.image_url}::${row.artist_id}`;
-      if (seen.has(key)) return false;
-      seen.add(key);
+    // De-duplicate twice: first by row id, then by content signature.
+    const seenIds = new Set<string>();
+    const uniqueById = sorted.filter((row) => {
+      if (seenIds.has(row.id)) return false;
+      seenIds.add(row.id);
       return true;
     });
+
+    const seenSignatures = new Set<string>();
+    const artworks = uniqueById.filter((row) => {
+      const key = `${row.title}::${row.image_url}::${row.artist_id}`;
+      if (seenSignatures.has(key)) return false;
+      seenSignatures.add(key);
+      return true;
+    });
+
+    console.log(
+      `[api/artist/${slug}] artworks raw=${artworksRows?.length ?? 0}, uniqueById=${uniqueById.length}, final=${artworks.length}`,
+    );
 
     return NextResponse.json({ artist: artistRow, artworks });
   } catch {
