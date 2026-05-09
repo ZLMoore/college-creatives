@@ -103,8 +103,8 @@ export default function MissionPage() {
                 marginBottom: "1rem",
               }}
             >
-              "We exist to celebrate the artistic side of students whose chosen fields do not
-              traditionally foster creativity."
+              &quot;We exist to celebrate the artistic side of students whose chosen fields do not
+              traditionally foster creativity.&quot;
             </p>
             <p style={{ margin: "0", fontSize: 14, fontStyle: "normal", color: "#F5A623" }}>— Our Founder</p>
           </section>

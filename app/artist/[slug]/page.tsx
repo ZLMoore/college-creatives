@@ -52,6 +52,19 @@ export default function ArtistProfilePage() {
     };
   }, [slug]);
 
+  const artist = payload?.artist;
+  const rawArtworks = payload?.artworks ?? [];
+  const artworks = useMemo(() => {
+    const seen = new Set<string>();
+    return rawArtworks.filter((row) => {
+      const key = `${row.title}::${row.image_url}::${row.artist_id}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [rawArtworks]);
+  console.log("artworks count:", artworks.length);
+
   if (missing) {
     notFound();
   }
@@ -75,17 +88,9 @@ export default function ArtistProfilePage() {
     );
   }
 
-  const { artist, artworks: rawArtworks } = payload;
-  const artworks = useMemo(() => {
-    const seen = new Set<string>();
-    return rawArtworks.filter((row) => {
-      const key = `${row.title}::${row.image_url}::${row.artist_id}`;
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-  }, [rawArtworks]);
-  console.log("artworks count:", artworks.length);
+  if (!artist) {
+    notFound();
+  }
 
   return (
     <div style={{ fontFamily: '"DM Sans", sans-serif', background: "var(--page-bg)", minHeight: "100vh" }}>
