@@ -1,0 +1,1 @@
+Always work on the main branch. Never create a new branch unless explicitly instructed. Before starting any task always run: git checkout main && git pull origin main. When committing, always use git add with specific file paths — never git add . Always run npm run build before pushing. Never rewrite or paraphrase existing copy unless explicitly told to do so.
