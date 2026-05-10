@@ -72,11 +72,11 @@ export default function MissionPage() {
 
       <main style={{ maxWidth: 820, margin: "0 auto", padding: "1.5rem 2rem 3rem" }}>
         <section>
-          <p style={{ margin: "0 0 0.75rem", fontSize: 15, lineHeight: 1.6, color: "var(--page-text)" }}>
+          <p style={{ margin: "0 0 0.75rem", fontSize: 17, lineHeight: 1.6, color: "var(--page-text)" }}>
             College Creatives began with a simple observation: many students pursuing rigorous academic paths quietly
             leave parts of themselves behind.
           </p>
-          <p style={{ margin: "0 0 0.75rem", fontSize: 15, lineHeight: 1.6, color: "var(--page-text)" }}>
+          <p style={{ margin: "0 0 0.75rem", fontSize: 17, lineHeight: 1.6, color: "var(--page-text)" }}>
             For many young adults pursuing higher education, that tension feels deeply familiar. Creativity remains
             central to their identity. What was missing was a space where both could exist together without compromise.
           </p>
@@ -88,7 +88,7 @@ export default function MissionPage() {
                 margin: "0 0 1rem",
                 fontFamily: '"Playfair Display", serif',
                 fontStyle: "italic",
-                fontSize: 16,
+                fontSize: 18,
                 lineHeight: 1.45,
                 color: "var(--page-text)",
               }}
@@ -98,11 +98,11 @@ export default function MissionPage() {
             </p>
             <p style={{ margin: "0", fontSize: 14, fontStyle: "normal", color: "#F5A623" }}>— Our Founder</p>
           </section>
-          <p style={{ margin: "0 0 0.75rem", fontSize: 15, lineHeight: 1.6, color: "var(--page-text)" }}>
+          <p style={{ margin: "0 0 0.75rem", fontSize: 17, lineHeight: 1.6, color: "var(--page-text)" }}>
             We present to you a curated platform where college students can earn passive income while pursuing
             demanding careers in STEM and other professional fields.
           </p>
-          <p style={{ margin: "0 0 0.75rem", fontSize: 15, lineHeight: 1.6, color: "var(--page-text)" }}>
+          <p style={{ margin: "0 0 0.75rem", fontSize: 17, lineHeight: 1.6, color: "var(--page-text)" }}>
             Artists apply using a verified .edu email and undergo a review process before joining the platform. Once
             approved, they upload their work, set their prices, and fulfill orders through Printful&apos;s print-on-demand
             infrastructure, with direct payouts through Stripe.
@@ -112,15 +112,6 @@ export default function MissionPage() {
             <span className="cc-about-scroll-chevron" />
           </div>
         </section>
-
-        <hr
-          style={{
-            border: "none",
-            borderTop: "1px solid var(--page-border)",
-            margin: "1rem 0",
-            width: "100%",
-          }}
-        />
 
         <section style={{ margin: "64px 0 0" }}>
           <div className="founder-grid">
