@@ -189,12 +189,12 @@ export default function ApplyPage() {
                   fontFamily: '"DM Mono", monospace',
                   fontSize: 11,
                   letterSpacing: 3,
-                  color: "#3BAFD4",
+                  color: "#F5A623",
                   textTransform: "uppercase",
                   margin: "0 0 14px",
                 }}
               >
-                FOR ARTISTS
+                APPLICATION
               </p>
               <h1
                 style={{
@@ -208,7 +208,7 @@ export default function ApplyPage() {
                 }}
               >
                 Ready to sell your{" "}
-                <span style={{ fontStyle: "italic", color: "#F5A623" }}>art?</span>
+                <span style={{ fontStyle: "italic", color: "#E8503A" }}>art?</span>
               </h1>
               <p
                 style={{
@@ -219,7 +219,7 @@ export default function ApplyPage() {
                   maxWidth: 440,
                 }}
               >
-                We handle printing, shipping, payments, and the storefront. You set your price, we take 10% commission — you keep the rest of your markup.
+                We handle printing, shipping, and payments. You set your price and keep 90% of your markup.
               </p>
             </div>
           </div>
