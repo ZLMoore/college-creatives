@@ -7,7 +7,9 @@ import { isEduEmail } from "@/lib/edu";
 import { MEDIUM_OPTIONS } from "@/lib/medium-options";
 
 const initial = {
-  name: "",
+  first_name: "",
+  last_name: "",
+  preferred_name: "",
   email: "",
   school: "",
   major: "",
@@ -18,6 +20,103 @@ const initial = {
 
 const APPLY_NAV_HEIGHT_PX = 58;
 
+type ApplyFieldKey = "first_name" | "last_name" | "email" | "school" | "major";
+
+const fieldInputWrapStyle: CSSProperties = {
+  position: "relative",
+  width: "100%",
+  minWidth: 0,
+};
+
+function FieldFloatingError({ message }: { message?: string }) {
+  if (!message) return null;
+  return (
+    <div
+      role="alert"
+      style={{
+        position: "absolute",
+        bottom: "calc(100% + 8px)",
+        left: 0,
+        zIndex: 10,
+        maxWidth: "100%",
+        boxSizing: "border-box",
+      }}
+    >
+      <div
+        style={{
+          position: "relative",
+          background: "rgba(18,23,42,0.85)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+          border: "1px solid rgba(247,244,239,0.15)",
+          borderRadius: 6,
+          padding: "6px 10px",
+          fontSize: 12,
+          fontFamily: '"DM Sans", sans-serif',
+          color: "#F7F4EF",
+        }}
+      >
+        <span style={{ color: "#F5A623" }} aria-hidden="true">
+          ⚠{" "}
+        </span>
+        {message}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            left: "50%",
+            bottom: -7,
+            transform: "translateX(-50%)",
+            width: 0,
+            height: 0,
+            borderLeft: "7px solid transparent",
+            borderRight: "7px solid transparent",
+            borderTop: "7px solid rgba(247,244,239,0.15)",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            left: "50%",
+            bottom: -6,
+            transform: "translateX(-50%)",
+            width: 0,
+            height: 0,
+            borderLeft: "6px solid transparent",
+            borderRight: "6px solid transparent",
+            borderTop: "6px solid rgba(18,23,42,0.85)",
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function validateApplyForm(form: typeof initial): Partial<Record<ApplyFieldKey, string>> {
+  const next: Partial<Record<ApplyFieldKey, string>> = {};
+  if (!form.first_name.trim()) next.first_name = "This field is required";
+  if (!form.last_name.trim()) next.last_name = "This field is required";
+  if (!form.email.trim()) next.email = "This field is required";
+  else if (!isEduEmail(form.email)) next.email = "Please use a valid .edu university email.";
+  if (!form.school.trim()) next.school = "This field is required";
+  if (!form.major.trim()) next.major = "This field is required";
+  return next;
+}
+
+function inputStyleWithFieldError(base: CSSProperties, hasError: boolean): CSSProperties {
+  if (!hasError) return base;
+  return { ...base, border: "1px solid #E8503A" };
+}
+
+function CoralRequiredStar() {
+  return (
+    <span style={{ color: "#E8503A" }} aria-hidden="true">
+      *
+    </span>
+  );
+}
+
 function applyHeroImageFor(isDark: boolean, isWinter: boolean): string {
   if (isWinter) {
     return isDark ? "/images/night_college_snow_aerial.png" : "/images/day_college_snow_aerial.png";
@@ -27,6 +126,7 @@ function applyHeroImageFor(isDark: boolean, isWinter: boolean): string {
 
 export default function ApplyPage() {
   const [form, setForm] = useState(initial);
+  const [errors, setErrors] = useState<Partial<Record<ApplyFieldKey, string>>>({});
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
@@ -48,21 +148,28 @@ export default function ApplyPage() {
     e.preventDefault();
     setError("");
     setStatus("");
-    if (!isEduEmail(form.email)) {
-      setError("Please use a valid .edu university email.");
+    const nextErrors = validateApplyForm(form);
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
       return;
     }
+    setErrors({});
     setLoading(true);
+    const fn = form.first_name.trim();
+    const ln = form.last_name.trim();
     const res = await fetch("/api/apply", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        name: form.name,
+        name: `${fn} ${ln}`,
+        first_name: fn,
+        last_name: ln,
+        preferred_name: form.preferred_name.trim() || null,
         email: form.email.trim().toLowerCase(),
         school: form.school,
         major: form.major,
-        medium: form.medium,
-        bio: form.bio,
+        medium: form.medium.trim(),
+        bio: form.bio.trim(),
         portfolio_url: form.portfolio_url || null,
       }),
     });
@@ -73,6 +180,7 @@ export default function ApplyPage() {
       return;
     }
     setForm(initial);
+    setErrors({});
     setStatus("Application received. Check your email for confirmation.");
   };
 
@@ -91,7 +199,7 @@ export default function ApplyPage() {
         fontFamily: '"DM Sans", sans-serif',
       }}
     >
-      <SiteHeader />
+      <SiteHeader hideApplyCta />
 
       <main
         className="apply-split"
@@ -147,6 +255,27 @@ export default function ApplyPage() {
               cursor: wait;
               opacity: 0.6;
             }
+            .apply-name-block {
+              display: flex;
+              flex-direction: column;
+              gap: 1rem;
+            }
+            .apply-name-row {
+              display: flex;
+              gap: 1rem;
+            }
+            .apply-name-row .apply-name-field {
+              flex: 1;
+              min-width: 0;
+            }
+            .apply-name-field-full {
+              width: 100%;
+            }
+            @media (max-width: 900px) {
+              .apply-name-row {
+                flex-direction: column;
+              }
+            }
           `}</style>
           <div
             className="apply-left-col"
@@ -189,12 +318,12 @@ export default function ApplyPage() {
                   fontFamily: '"DM Mono", monospace',
                   fontSize: 11,
                   letterSpacing: 3,
-                  color: "#3BAFD4",
+                  color: "#F5A623",
                   textTransform: "uppercase",
                   margin: "0 0 14px",
                 }}
               >
-                FOR ARTISTS
+                APPLICATION
               </p>
               <h1
                 style={{
@@ -208,7 +337,7 @@ export default function ApplyPage() {
                 }}
               >
                 Ready to sell your{" "}
-                <span style={{ fontStyle: "italic", color: "#F5A623" }}>art?</span>
+                <span style={{ fontStyle: "italic", color: "#E8503A" }}>art?</span>
               </h1>
               <p
                 style={{
@@ -219,7 +348,7 @@ export default function ApplyPage() {
                   maxWidth: 440,
                 }}
               >
-                We handle printing, shipping, payments, and the storefront. You set your price, we take 10% commission — you keep the rest of your markup.
+                We handle printing, shipping, and payments. You set your price.
               </p>
             </div>
           </div>
@@ -237,6 +366,7 @@ export default function ApplyPage() {
             }}
           >
           <form
+            noValidate
             onSubmit={onSubmit}
             style={{
               width: "100%",
@@ -246,63 +376,140 @@ export default function ApplyPage() {
               gap: 16,
             }}
           >
+            <div className="apply-name-block">
+              <div className="apply-name-row">
+                <label className="apply-name-field" style={labelBlock}>
+                  <span style={labelText}>
+                    First name <CoralRequiredStar />
+                  </span>
+                  <div style={fieldInputWrapStyle}>
+                    <FieldFloatingError message={errors.first_name} />
+                    <input
+                      value={form.first_name}
+                      onChange={(ev) => {
+                        setForm((p) => ({ ...p, first_name: ev.target.value }));
+                        setErrors((prev) => {
+                          const n = { ...prev };
+                          delete n.first_name;
+                          return n;
+                        });
+                      }}
+                      placeholder="e.g. Jane"
+                      className="apply-form-field"
+                      style={inputStyleWithFieldError(inputStyle, !!errors.first_name)}
+                    />
+                  </div>
+                </label>
+                <label className="apply-name-field" style={labelBlock}>
+                  <span style={labelText}>
+                    Last name <CoralRequiredStar />
+                  </span>
+                  <div style={fieldInputWrapStyle}>
+                    <FieldFloatingError message={errors.last_name} />
+                    <input
+                      value={form.last_name}
+                      onChange={(ev) => {
+                        setForm((p) => ({ ...p, last_name: ev.target.value }));
+                        setErrors((prev) => {
+                          const n = { ...prev };
+                          delete n.last_name;
+                          return n;
+                        });
+                      }}
+                      placeholder="e.g. Doe"
+                      className="apply-form-field"
+                      style={inputStyleWithFieldError(inputStyle, !!errors.last_name)}
+                    />
+                  </div>
+                </label>
+              </div>
+              <label className="apply-name-field-full" style={labelBlock}>
+                <span style={labelText}>Preferred name</span>
+                <input
+                  value={form.preferred_name}
+                  onChange={(ev) => setForm((p) => ({ ...p, preferred_name: ev.target.value }))}
+                  placeholder="What should we call you?"
+                  className="apply-form-field"
+                  style={inputStyle}
+                />
+              </label>
+            </div>
             <label style={labelBlock}>
-              <span style={labelText}>Full Name</span>
-              <input
-                required
-                value={form.name}
-                onChange={(ev) => setForm((p) => ({ ...p, name: ev.target.value }))}
-                placeholder="Your full name"
-                className="apply-form-field"
-                style={inputStyle}
-              />
+              <span style={labelText}>
+                University Email <CoralRequiredStar />
+              </span>
+              <div style={fieldInputWrapStyle}>
+                <FieldFloatingError message={errors.email} />
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(ev) => {
+                    setForm((p) => ({ ...p, email: ev.target.value }));
+                    setErrors((prev) => {
+                      const n = { ...prev };
+                      delete n.email;
+                      return n;
+                    });
+                  }}
+                  placeholder="you@university.edu"
+                  className="apply-form-field"
+                  style={inputStyleWithFieldError(inputStyle, !!errors.email)}
+                />
+              </div>
             </label>
             <label style={labelBlock}>
-              <span style={labelText}>University Email (.edu required)</span>
-              <input
-                required
-                type="email"
-                value={form.email}
-                onChange={(ev) => setForm((p) => ({ ...p, email: ev.target.value }))}
-                placeholder="you@university.edu"
-                className="apply-form-field"
-                style={inputStyle}
-              />
+              <span style={labelText}>
+                School <CoralRequiredStar />
+              </span>
+              <div style={fieldInputWrapStyle}>
+                <FieldFloatingError message={errors.school} />
+                <input
+                  value={form.school}
+                  onChange={(ev) => {
+                    setForm((p) => ({ ...p, school: ev.target.value }));
+                    setErrors((prev) => {
+                      const n = { ...prev };
+                      delete n.school;
+                      return n;
+                    });
+                  }}
+                  placeholder="e.g. Boston University"
+                  className="apply-form-field"
+                  style={inputStyleWithFieldError(inputStyle, !!errors.school)}
+                />
+              </div>
             </label>
             <label style={labelBlock}>
-              <span style={labelText}>School</span>
-              <input
-                required
-                value={form.school}
-                onChange={(ev) => setForm((p) => ({ ...p, school: ev.target.value }))}
-                placeholder="e.g. Boston University"
-                className="apply-form-field"
-                style={inputStyle}
-              />
+              <span style={labelText}>
+                Major <CoralRequiredStar />
+              </span>
+              <div style={fieldInputWrapStyle}>
+                <FieldFloatingError message={errors.major} />
+                <input
+                  value={form.major}
+                  onChange={(ev) => {
+                    setForm((p) => ({ ...p, major: ev.target.value }));
+                    setErrors((prev) => {
+                      const n = { ...prev };
+                      delete n.major;
+                      return n;
+                    });
+                  }}
+                  placeholder="e.g. Fine Arts"
+                  className="apply-form-field"
+                  style={inputStyleWithFieldError(inputStyle, !!errors.major)}
+                />
+              </div>
             </label>
             <label style={labelBlock}>
-              <span style={labelText}>Major</span>
-              <input
-                required
-                value={form.major}
-                onChange={(ev) => setForm((p) => ({ ...p, major: ev.target.value }))}
-                placeholder="e.g. Fine Arts"
-                className="apply-form-field"
-                style={inputStyle}
-              />
-            </label>
-            <label style={labelBlock}>
-              <span style={labelText}>Medium / Style</span>
+              <span style={labelText}>Art Style</span>
               <select
-                required
                 value={form.medium}
                 onChange={(ev) => setForm((p) => ({ ...p, medium: ev.target.value }))}
                 className="apply-form-field"
                 style={{ ...inputStyle, cursor: "pointer" }}
               >
-                <option value="" disabled>
-                  Select medium
-                </option>
+                <option value="">Select medium</option>
                 {MEDIUM_OPTIONS.map((m) => (
                   <option key={m} value={m}>
                     {m}
@@ -311,7 +518,7 @@ export default function ApplyPage() {
               </select>
             </label>
             <label style={labelBlock}>
-              <span style={labelText}>Portfolio Link (optional)</span>
+              <span style={labelText}>Portfolio Link</span>
               <input
                 type="text"
                 value={form.portfolio_url}
@@ -322,9 +529,8 @@ export default function ApplyPage() {
               />
             </label>
             <label style={labelBlock}>
-              <span style={labelText}>Tell us about your work</span>
+              <span style={labelText}>About you</span>
               <textarea
-                required
                 rows={5}
                 value={form.bio}
                 onChange={(ev) => setForm((p) => ({ ...p, bio: ev.target.value }))}
@@ -338,7 +544,7 @@ export default function ApplyPage() {
             <button type="submit" disabled={loading} className="apply-submit-btn">
               {loading ? "Submitting…" : "Submit application"}
             </button>
-            <p style={{ margin: "4px 0 0", fontSize: 12, lineHeight: 1.65, color: "rgba(255,255,255,.45)", textAlign: "left" }}>
+            <p style={{ margin: "4px 0 0", fontSize: 12, lineHeight: 1.65, color: "rgba(255,255,255,.45)", textAlign: "center" }}>
               You will earn 90% of your markup on every sale. We take a 10% commission to keep the platform running.
             </p>
           </form>

@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { EDU_EMAIL_HTML_PATTERN, isEduEmail } from "@/lib/edu";
 import { MEDIUM_OPTIONS } from "@/lib/medium-options";
 
 const initialState = {
@@ -20,13 +21,17 @@ export const ApplyForm = () => {
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setLoading(true);
     setStatus("");
+    if (!isEduEmail(form.email)) {
+      setStatus("Please use a valid .edu university email.");
+      return;
+    }
+    setLoading(true);
 
     const response = await fetch("/api/apply", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ ...form, email: form.email.trim().toLowerCase() }),
     });
     const data = await response.json();
 
@@ -75,6 +80,12 @@ export const ApplyForm = () => {
             <input
               required={key !== "portfolio_url"}
               type={key === "email" ? "email" : "text"}
+              pattern={key === "email" ? EDU_EMAIL_HTML_PATTERN : undefined}
+              title={
+                key === "email"
+                  ? "University email whose domain ends in .edu (e.g. you@school.edu)."
+                  : undefined
+              }
               value={form[key as keyof typeof form]}
               onChange={(event) =>
                 setForm((prev) => ({ ...prev, [key]: event.target.value }))
@@ -88,7 +99,6 @@ export const ApplyForm = () => {
       <label className="grid gap-2 text-sm font-semibold text-navy">
         Artist Bio
         <textarea
-          required
           rows={6}
           value={form.bio}
           onChange={(event) => setForm((prev) => ({ ...prev, bio: event.target.value }))}

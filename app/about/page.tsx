@@ -235,7 +235,7 @@ export default function MissionPage() {
           margin: 2rem auto;
         }
         .cc-about-scroll-text {
-          font-family: "DM Mono", monospace;
+          font-family: 'DM Mono', monospace;
           font-size: 12px;
           letter-spacing: 2px;
           color: rgba(18, 23, 42, 0.4);

@@ -12,6 +12,8 @@ export type SeedArtworkInput = {
 
 export type SeedArtistInput = {
   name: string;
+  first_name: string;
+  last_name: string;
   email: string;
   school: string;
   major: string;
@@ -26,6 +28,8 @@ export type SeedArtistInput = {
 export const DEMO_SEED_ARTISTS: SeedArtistInput[] = [
   {
     name: "Vincent van Gogh",
+    first_name: "Vincent",
+    last_name: "van Gogh",
     email: "vangogh@demo.edu",
     school: "Royal Academy of Arts",
     major: "Fine Arts",
@@ -59,6 +63,8 @@ export const DEMO_SEED_ARTISTS: SeedArtistInput[] = [
   },
   {
     name: "Leonardo da Vinci",
+    first_name: "Leonardo",
+    last_name: "da Vinci",
     email: "davinci@demo.edu",
     school: "Florentine Academy",
     major: "Renaissance Art",
@@ -85,6 +91,8 @@ export const DEMO_SEED_ARTISTS: SeedArtistInput[] = [
   },
   {
     name: "Katsushika Hokusai",
+    first_name: "Katsushika",
+    last_name: "Hokusai",
     email: "hokusai@demo.edu",
     school: "Kano School of Art",
     major: "Ukiyo-e Printmaking",
@@ -104,6 +112,8 @@ export const DEMO_SEED_ARTISTS: SeedArtistInput[] = [
   },
   {
     name: "Wassily Kandinsky",
+    first_name: "Wassily",
+    last_name: "Kandinsky",
     email: "kandinsky@demo.edu",
     school: "Bauhaus",
     major: "Abstract Composition",
@@ -155,6 +165,9 @@ export async function seedDemoArtists(client: SupabaseClient): Promise<SeedDemoR
         .from("artists")
         .insert({
           name: a.name,
+          first_name: a.first_name,
+          last_name: a.last_name,
+          preferred_name: null,
           email: a.email,
           school: a.school,
           major: a.major,
