@@ -77,9 +77,8 @@ export default function MissionPage() {
             leave parts of themselves behind.
           </p>
           <p style={{ margin: "0 0 1.25rem", fontSize: 18, lineHeight: 1.75, color: "var(--page-text)" }}>
-            For founder Zakora Moore, that tension felt deeply familiar. While building a future in medicine and research,
-            creativity remained equally central to her identity. What was missing was a space where both could exist together
-            without compromise.
+            For many young adults pursuing higher education, that tension feels deeply familiar. Creativity remains central
+            to their identity. What was missing was a space where both could exist together without compromise.
           </p>
           <section
             style={{ maxWidth: 820, margin: "1.5rem auto", paddingLeft: 18, borderLeft: "3px solid #F5A623" }}
@@ -100,9 +99,8 @@ export default function MissionPage() {
             <p style={{ margin: "0", fontSize: 14, fontStyle: "normal", color: "#F5A623" }}>— Our Founder</p>
           </section>
           <p style={{ margin: "0 0 1.25rem", fontSize: 18, lineHeight: 1.75, color: "var(--page-text)" }}>
-            College Creatives was built to bridge that divide. A curated platform where college artists can apply, sell
-            museum-quality prints of their work, and retain ownership of their creative practice while pursuing demanding
-            careers in science, medicine, engineering, and other professional fields.
+            We present to you a curated platform where college students can earn passive income while pursuing demanding
+            careers in STEM and other professional fields.
           </p>
           <p style={{ margin: "0 0 1.25rem", fontSize: 18, lineHeight: 1.75, color: "var(--page-text)" }}>
             Artists apply using a verified .edu email and undergo a review process before joining the platform. Once
