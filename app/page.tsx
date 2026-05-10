@@ -442,7 +442,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--page-bg); color: va
         </div>
       </section>
 
-      <section id="gallery" className="cc-gallery">
+      <div id="gallery" style={{ position: "relative", top: "-70px" }} />
+      <section className="cc-gallery">
         <p className="cc-gallery-eyebrow">The gallery</p>
         <h2 className="cc-gallery-title">Browse by medium</h2>
         <div className="cc-filters">
