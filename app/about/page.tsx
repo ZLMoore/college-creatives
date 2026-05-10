@@ -34,10 +34,11 @@ export default function MissionPage() {
 
   return (
     <div
+      className="about-page"
       style={{
         margin: 0,
         padding: 0,
-        minHeight: "100vh",
+        minHeight: "100svh",
         width: "100%",
         overflowX: "hidden",
         background: "var(--page-bg)",
@@ -56,6 +57,7 @@ export default function MissionPage() {
         }}
       >
         <p
+          className="cc-dm-mono-ui"
           style={{
             margin: "0 0 14px",
             fontFamily: '"DM Mono", monospace',
@@ -63,6 +65,7 @@ export default function MissionPage() {
             letterSpacing: 3,
             color: "#fff",
             textTransform: "uppercase",
+            lineHeight: 1.7,
           }}
         >
           OUR STORY
@@ -82,7 +85,7 @@ export default function MissionPage() {
         </h1>
       </section>
 
-      <main style={{ maxWidth: 820, margin: "0 auto", padding: "3.5rem 2rem 3rem" }}>
+      <main className="about-page-main">
         <section>
           <p style={{ margin: "0 0 1rem", fontSize: 16, lineHeight: 1.7, color: "var(--page-text)" }}>
             College Creatives began with a simple observation: many students pursuing rigorous academic paths quietly leave
@@ -93,7 +96,12 @@ export default function MissionPage() {
             their identity. What was missing was a space where both could exist together without compromise.
           </p>
           <section
-            style={{ maxWidth: 820, margin: "1.5rem auto", paddingLeft: 18, borderLeft: "3px solid #F5A623" }}
+            style={{
+              maxWidth: 820,
+              margin: "2rem 0",
+              paddingLeft: "1.25rem",
+              borderLeft: "4px solid #F5A623",
+            }}
           >
             <p
               style={{
@@ -101,14 +109,16 @@ export default function MissionPage() {
                 fontFamily: '"Playfair Display", serif',
                 fontStyle: "italic",
                 fontSize: 27,
-                lineHeight: 1.75,
+                lineHeight: 1.7,
                 color: "var(--page-text)",
               }}
             >
               &quot;College Creatives exists to celebrate the artistic side of students whose chosen
               fields do not traditionally foster creativity.&quot;
             </p>
-            <p style={{ margin: "0", fontSize: 14, fontStyle: "normal", color: "#F5A623" }}>— Our Founder</p>
+            <p style={{ margin: "0", fontSize: 14, fontStyle: "normal", color: "#F5A623", lineHeight: 1.7 }}>
+              — Our Founder
+            </p>
           </section>
           <p style={{ margin: "0 0 1rem", fontSize: 16, lineHeight: 1.7, color: "var(--page-text)" }}>
             We present to you a curated platform where college students can earn passive income while pursuing demanding careers
@@ -127,19 +137,11 @@ export default function MissionPage() {
 
         <section style={{ margin: "64px 0 0" }}>
           <div className="founder-grid">
-            <div
-              style={{
-                width: "100%",
-                maxWidth: 320,
-                flexShrink: 0,
-                display: "flex",
-                alignSelf: "stretch",
-              }}
-            >
+            <div className="about-founder-photo-wrap">
               <img
                 src="/images/about.png"
                 alt="Zakora Moore"
-                style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 8, display: "block" }}
+                style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 12, display: "block" }}
               />
             </div>
 
@@ -152,6 +154,7 @@ export default function MissionPage() {
                   letterSpacing: "2px",
                   color: "#3BAFD4",
                   fontWeight: 600,
+                  lineHeight: 1.7,
                 }}
               >
                 The founder
@@ -218,6 +221,17 @@ export default function MissionPage() {
       </section>
 
       <style>{`
+        .about-page-main {
+          max-width: 820px;
+          margin: 0 auto;
+          padding: 3.5rem 2rem 3rem;
+        }
+        .about-page .cc-newsletter-label,
+        .about-page .cc-newsletter-sub,
+        .about-page .cc-newsletter-feedback {
+          line-height: 1.7;
+        }
+
         .cc-about-scroll {
           display: flex;
           flex-direction: column;
@@ -255,10 +269,23 @@ export default function MissionPage() {
         }
 
         .founder-grid { display: flex; align-items: stretch; gap: 2.5rem; }
+        .about-founder-photo-wrap {
+          width: 100%;
+          max-width: 380px;
+          flex-shrink: 0;
+          display: flex;
+          align-self: stretch;
+        }
 
         @media (max-width: 760px) {
+          .about-page-main {
+            padding: 3.5rem 1.5rem 3rem;
+          }
           .founder-grid {
             flex-direction: column;
+          }
+          .about-founder-photo-wrap {
+            margin: 2rem auto;
           }
         }
       `}</style>

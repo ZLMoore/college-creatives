@@ -40,7 +40,7 @@ export default function ArtistPortalPage() {
       style={{
         margin: 0,
         padding: 0,
-        minHeight: "100vh",
+        minHeight: "100svh",
         width: "100%",
         overflowX: "hidden",
         background: "#12172A",
@@ -51,6 +51,39 @@ export default function ArtistPortalPage() {
       }}
     >
       <style>{`
+        .artist-portal-main {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 60px 24px;
+        }
+        .artist-portal-hero {
+          width: 100%;
+          max-width: 640px;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .artist-portal-email-input {
+          padding: 14px 20px;
+          font-size: 15px;
+          width: 100%;
+          max-width: 480px;
+          background: rgba(255, 255, 255, 0.06);
+          border: 0.5px solid rgba(255, 255, 255, 0.15);
+          border-radius: 8px;
+          color: #fff;
+          outline: none;
+          font-family: 'DM Sans', sans-serif;
+          display: block;
+          margin: 0 auto 12px;
+          box-sizing: border-box;
+        }
+
         .artist-portal-dashboard-btn {
           width: 100%;
           max-width: 480px;
@@ -67,6 +100,7 @@ export default function ArtistPortalPage() {
           font-family: 'DM Sans', sans-serif;
           cursor: pointer;
           transition: background 0.2s ease, color 0.2s ease;
+          box-sizing: border-box;
         }
         .artist-portal-dashboard-btn:hover:not(:disabled) {
           background: #e8503a;
@@ -76,30 +110,44 @@ export default function ArtistPortalPage() {
           cursor: wait;
           opacity: 0.6;
         }
+
+        .artist-portal-apply-link {
+          color: #e8503a;
+          text-decoration: none;
+          font-weight: 600;
+        }
+
+        @media (max-width: 767px) {
+          .artist-portal-main {
+            justify-content: flex-start;
+            padding: 0 24px 60px;
+          }
+          .artist-portal-hero {
+            padding-top: clamp(3rem, 15vh, 6rem);
+          }
+          .artist-portal-email-input {
+            min-height: 52px;
+            font-size: 16px;
+          }
+          .artist-portal-dashboard-btn {
+            min-height: 52px;
+            width: 100%;
+            max-width: none;
+          }
+          .artist-portal-apply-link {
+            display: inline-block;
+            padding: 0.75rem 1rem;
+            min-height: 44px;
+            box-sizing: border-box;
+          }
+        }
       `}</style>
       <SiteHeader />
 
-      <main
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "60px 24px",
-        }}
-      >
-        <section
-          style={{
-            width: "100%",
-            maxWidth: "640px",
-            textAlign: "center",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
+      <main className="artist-portal-main">
+        <section className="artist-portal-hero">
           <p
+            className="cc-dm-mono-ui"
             style={{
               fontFamily: '"DM Mono", monospace',
               fontSize: 11,
@@ -151,6 +199,7 @@ export default function ArtistPortalPage() {
           >
             <label style={{ ...fieldWidth, display: "grid", gap: 8, textAlign: "left" }}>
               <span
+                className="cc-dm-mono-ui"
                 style={{
                   fontFamily: '"DM Mono", monospace',
                   fontSize: 10,
@@ -167,20 +216,7 @@ export default function ArtistPortalPage() {
                 placeholder="you@university.edu"
                 value={email}
                 onChange={(ev) => setEmail(ev.target.value)}
-                style={{
-                  padding: "14px 20px",
-                  fontSize: "15px",
-                  width: "100%",
-                  maxWidth: "480px",
-                  background: "rgba(255,255,255,0.06)",
-                  border: "0.5px solid rgba(255,255,255,0.15)",
-                  borderRadius: "8px",
-                  color: "#fff",
-                  outline: "none",
-                  fontFamily: '"DM Sans", sans-serif',
-                  display: "block",
-                  margin: "0 auto 12px",
-                }}
+                className="artist-portal-email-input"
               />
             </label>
             {error ? (
@@ -201,7 +237,7 @@ export default function ArtistPortalPage() {
               }}
             >
               Not an artist yet?{" "}
-              <Link href="/apply" style={{ color: "#E8503A", textDecoration: "none", fontWeight: 600 }}>
+              <Link href="/apply" className="artist-portal-apply-link">
                 Apply to join →
               </Link>
             </p>

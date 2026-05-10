@@ -92,7 +92,7 @@ export default function ApplyPage() {
         margin: 0,
         padding: 0,
         width: "100%",
-        minHeight: "100vh",
+        minHeight: "100svh",
         display: "flex",
         flexDirection: "column",
         border: "none",
@@ -110,7 +110,7 @@ export default function ApplyPage() {
           display: "flex",
           flexDirection: "row",
           width: "100%",
-          minHeight: `calc(100vh - ${APPLY_NAV_HEIGHT_PX}px)`,
+          minHeight: `calc(100svh - ${APPLY_NAV_HEIGHT_PX}px)`,
           margin: 0,
           padding: 0,
           background: "#12172A",
@@ -118,15 +118,28 @@ export default function ApplyPage() {
         }}
       >
           <style>{`
+            .apply-hero-overlay {
+              position: absolute;
+              inset: 0;
+              pointer-events: none;
+              background: rgba(18, 23, 42, 0.5);
+            }
             @media (max-width: 900px) {
               .apply-split { flex-direction: column !important; }
               .apply-left-col {
                 width: 100% !important;
-                min-height: 45vh !important;
+                min-height: 45svh !important;
               }
               .apply-right-col {
                 width: 100% !important;
                 padding: 56px 24px 80px !important;
+              }
+              .apply-hero-overlay {
+                background: linear-gradient(
+                  to bottom,
+                  rgba(18, 23, 42, 0.5) 0%,
+                  rgba(18, 23, 42, 0.8) 100%
+                );
               }
             }
             .apply-form-field:focus,
@@ -134,6 +147,29 @@ export default function ApplyPage() {
               outline: none;
               border-color: #e8503a;
               box-shadow: 0 0 0 2px rgba(232, 80, 58, 0.45);
+            }
+            .apply-form-select {
+              -webkit-appearance: none;
+              appearance: none;
+              cursor: pointer;
+              background-color: #1e2438;
+              background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23F7F4EF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+              background-repeat: no-repeat;
+              background-position: right 12px center;
+              padding-right: 40px;
+              border: 0.5px solid rgba(255, 255, 255, 0.1);
+              border-radius: 8px;
+              padding: 12px 40px 12px 16px;
+              color: #f7f4ef;
+              width: 100%;
+              font-family: 'DM Sans', sans-serif;
+              font-size: 13px;
+              box-sizing: border-box;
+            }
+            .apply-form-select option,
+            .apply-form-select optgroup {
+              background: #1e2438;
+              color: #f7f4ef;
             }
             .apply-submit-btn {
               margin-top: 4px;
@@ -174,8 +210,31 @@ export default function ApplyPage() {
               width: 100%;
             }
             @media (max-width: 900px) {
+              .apply-page-form {
+                display: flex;
+                flex-direction: column;
+                gap: 1.25rem;
+                padding-bottom: 2rem;
+              }
+              .apply-name-block {
+                gap: 1.25rem;
+              }
               .apply-name-row {
                 flex-direction: column;
+                gap: 1.25rem;
+              }
+              .apply-page-form input.apply-form-field,
+              .apply-page-form textarea.apply-form-field {
+                min-height: 52px !important;
+                font-size: 16px !important;
+                padding: 0.75rem 1rem !important;
+                border-radius: 8px !important;
+              }
+              .apply-page-form select.apply-form-field {
+                min-height: 52px !important;
+                font-size: 16px !important;
+                padding: 0.75rem 2.75rem 0.75rem 1rem !important;
+                border-radius: 8px !important;
               }
             }
           `}</style>
@@ -195,14 +254,7 @@ export default function ApplyPage() {
               flexDirection: "column",
             }}
           >
-            <div
-              aria-hidden
-              style={{
-                position: "absolute",
-                inset: 0,
-                background: "rgba(18,23,42,0.5)",
-              }}
-            />
+            <div className="apply-hero-overlay" aria-hidden />
             <div
               style={{
                 position: "relative",
@@ -216,6 +268,7 @@ export default function ApplyPage() {
               }}
             >
               <p
+                className="cc-dm-mono-ui"
                 style={{
                   fontFamily: '"DM Mono", monospace',
                   fontSize: 11,
@@ -268,6 +321,7 @@ export default function ApplyPage() {
             }}
           >
           <form
+            className="apply-page-form"
             onSubmit={onSubmit}
             style={{
               width: "100%",
@@ -280,7 +334,7 @@ export default function ApplyPage() {
             <div className="apply-name-block">
               <div className="apply-name-row">
                 <label className="apply-name-field" style={labelBlock}>
-                  <span style={labelText}>
+                  <span className="cc-dm-mono-ui" style={labelText}>
                     First name <CoralRequiredStar />
                   </span>
                   <input
@@ -293,7 +347,7 @@ export default function ApplyPage() {
                   />
                 </label>
                 <label className="apply-name-field" style={labelBlock}>
-                  <span style={labelText}>
+                  <span className="cc-dm-mono-ui" style={labelText}>
                     Last name <CoralRequiredStar />
                   </span>
                   <input
@@ -307,7 +361,7 @@ export default function ApplyPage() {
                 </label>
               </div>
               <label className="apply-name-field-full" style={labelBlock}>
-                <span style={labelText}>Preferred name</span>
+                <span className="cc-dm-mono-ui" style={labelText}>Preferred name</span>
                 <input
                   value={form.preferred_name}
                   onChange={(ev) => setForm((p) => ({ ...p, preferred_name: ev.target.value }))}
@@ -318,7 +372,7 @@ export default function ApplyPage() {
               </label>
             </div>
             <label style={labelBlock}>
-              <span style={labelText}>
+              <span className="cc-dm-mono-ui" style={labelText}>
                 University Email <CoralRequiredStar />
               </span>
               <input
@@ -332,7 +386,7 @@ export default function ApplyPage() {
               />
             </label>
             <label style={labelBlock}>
-              <span style={labelText}>
+              <span className="cc-dm-mono-ui" style={labelText}>
                 School <CoralRequiredStar />
               </span>
               <input
@@ -345,7 +399,7 @@ export default function ApplyPage() {
               />
             </label>
             <label style={labelBlock}>
-              <span style={labelText}>
+              <span className="cc-dm-mono-ui" style={labelText}>
                 Major <CoralRequiredStar />
               </span>
               <input
@@ -358,12 +412,11 @@ export default function ApplyPage() {
               />
             </label>
             <label style={labelBlock}>
-              <span style={labelText}>Art Style</span>
+              <span className="cc-dm-mono-ui" style={labelText}>Art Style</span>
               <select
                 value={form.medium}
                 onChange={(ev) => setForm((p) => ({ ...p, medium: ev.target.value }))}
-                className="apply-form-field"
-                style={{ ...inputStyle, cursor: "pointer" }}
+                className="apply-form-field apply-form-select"
               >
                 <option value="">Select medium</option>
                 {MEDIUM_OPTIONS.map((m) => (
@@ -374,7 +427,7 @@ export default function ApplyPage() {
               </select>
             </label>
             <label style={labelBlock}>
-              <span style={labelText}>Portfolio Link</span>
+              <span className="cc-dm-mono-ui" style={labelText}>Portfolio Link</span>
               <input
                 type="text"
                 value={form.portfolio_url}
@@ -385,7 +438,7 @@ export default function ApplyPage() {
               />
             </label>
             <label style={labelBlock}>
-              <span style={labelText}>About you</span>
+              <span className="cc-dm-mono-ui" style={labelText}>About you</span>
               <textarea
                 rows={5}
                 value={form.bio}
