@@ -2,6 +2,7 @@
 
 import type { CSSProperties } from "react";
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 
 export default function ForArtistsPage() {
@@ -188,6 +189,33 @@ export default function ForArtistsPage() {
             <button type="submit" disabled={loading} className="for-artists-dashboard-btn">
               {loading ? "Redirecting..." : "Access my dashboard →"}
             </button>
+
+            <div
+              style={{
+                ...fieldWidth,
+                marginTop: 32,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 12,
+              }}
+            >
+              <p
+                style={{
+                  margin: 0,
+                  fontFamily: '"DM Mono", monospace',
+                  fontSize: 10,
+                  color: "rgba(255,255,255,.5)",
+                  textTransform: "uppercase",
+                  letterSpacing: 1.3,
+                }}
+              >
+                Not an artist yet?
+              </p>
+              <Link href="/apply" className="for-artists-apply-ghost">
+                Apply to join →
+              </Link>
+            </div>
 
             <p
               style={{

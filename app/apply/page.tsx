@@ -199,7 +199,7 @@ export default function ApplyPage() {
         fontFamily: '"DM Sans", sans-serif',
       }}
     >
-      <SiteHeader hideApplyCta />
+      <SiteHeader />
 
       <main
         className="apply-split"

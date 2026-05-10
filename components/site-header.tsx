@@ -19,14 +19,9 @@ const centeredLinksStyle: CSSProperties = {
   gap: "28px",
 };
 
-type SiteHeaderProps = {
-  /** Hide the primary CTA (e.g. on `/apply` where the page is already the apply flow). */
-  hideApplyCta?: boolean;
-};
-
 const HEADER_HEIGHT_PX = 58;
 
-export const SiteHeader = ({ hideApplyCta }: SiteHeaderProps = {}) => (
+export const SiteHeader = () => (
   <Fragment>
   <header
     style={{
@@ -104,9 +99,6 @@ export const SiteHeader = ({ hideApplyCta }: SiteHeaderProps = {}) => (
       </Link>
 
       <div style={{ ...centeredLinksStyle, pointerEvents: "none" }}>
-        <Link href="/" style={{ ...linkStyle, pointerEvents: "auto" }}>
-          Home
-        </Link>
         <Link href="/about" style={{ ...linkStyle, pointerEvents: "auto" }}>
           About
         </Link>
@@ -116,16 +108,11 @@ export const SiteHeader = ({ hideApplyCta }: SiteHeaderProps = {}) => (
         <Link href="/#faq" prefetch={false} style={{ ...linkStyle, pointerEvents: "auto" }}>
           FAQ
         </Link>
-        <Link href="/for-artists" style={{ ...linkStyle, pointerEvents: "auto" }}>
-          Artist Portal
-        </Link>
       </div>
 
-      {hideApplyCta ? null : (
-        <Link href="/apply" className="cc-header-apply-btn">
-          Apply to Sell
-        </Link>
-      )}
+      <Link href="/for-artists" className="cc-header-apply-btn">
+        Artist Portal
+      </Link>
     </nav>
   </header>
   <div
