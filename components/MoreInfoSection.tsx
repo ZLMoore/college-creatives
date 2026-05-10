@@ -39,6 +39,7 @@ export function MoreInfoSection() {
     >
       <div style={{ maxWidth: 560, margin: "0 auto" }}>
         <p
+          className="cc-dm-mono-ui"
           style={{
             fontFamily: '"DM Mono", monospace',
             fontSize: 10,
@@ -69,6 +70,7 @@ export function MoreInfoSection() {
         <form onSubmit={onSubmit} style={{ display: "grid", gap: 14 }}>
           <label style={{ display: "grid", gap: 6 }}>
             <span
+              className="cc-dm-mono-ui"
               style={{
                 fontFamily: '"DM Mono", monospace',
                 fontSize: 10,
@@ -94,6 +96,7 @@ export function MoreInfoSection() {
           </label>
           <label style={{ display: "grid", gap: 6 }}>
             <span
+              className="cc-dm-mono-ui"
               style={{
                 fontFamily: '"DM Mono", monospace',
                 fontSize: 10,

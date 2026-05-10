@@ -34,6 +34,48 @@ body {
   }
 }
 
+/* Reduce ~300ms tap delay on iOS Safari */
+a,
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+[role="button"] {
+  touch-action: manipulation;
+}
+
+@media (max-width: 767px) {
+  /* DM Mono labels / tags: never smaller than 11px; readable tracking */
+  .cc-dm-mono-ui {
+    font-size: 11px !important;
+    letter-spacing: 0.05em !important;
+  }
+  .cc-newsletter-label {
+    font-size: 11px !important;
+    letter-spacing: 0.05em !important;
+  }
+  .cc-gallery-eyebrow,
+  .cc-artist-idx,
+  .cc-feat-kicker,
+  .cc-process-label,
+  .cc-more-label,
+  .cc-more-field-lbl {
+    font-size: 11px !important;
+    letter-spacing: 0.05em !important;
+  }
+  .cc-hero-kicker,
+  .cc-scroll-text {
+    letter-spacing: 0.05em !important;
+  }
+  .cc-art-payout {
+    font-size: 11px !important;
+    letter-spacing: 0.05em !important;
+  }
+  .cc-about-scroll-text {
+    letter-spacing: 0.05em !important;
+  }
+}
+
 /* Newsletter — shared by homepage and /about */
 .cc-newsletter {
   background: #12172a;

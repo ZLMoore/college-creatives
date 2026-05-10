@@ -63,15 +63,13 @@ export default function ArtistProfilePage() {
       return true;
     });
   }, [payload?.artworks]);
-  console.log("artworks count:", artworks.length);
-
   if (missing) {
     notFound();
   }
 
   if (loading || !payload) {
     return (
-      <div style={{ fontFamily: '"DM Sans", sans-serif', background: "var(--page-bg)", minHeight: "100vh" }}>
+      <div style={{ fontFamily: '"DM Sans", sans-serif', background: "var(--page-bg)", minHeight: "100svh" }}>
         <SiteHeader />
         <div
           style={{
@@ -93,12 +91,13 @@ export default function ArtistProfilePage() {
   }
 
   return (
-    <div style={{ fontFamily: '"DM Sans", sans-serif', background: "var(--page-bg)", minHeight: "100vh" }}>
+    <div style={{ fontFamily: '"DM Sans", sans-serif', background: "var(--page-bg)", minHeight: "100svh" }}>
       <SiteHeader />
 
       {/* HERO */}
       <div style={{ background: "#12172A", padding: "80px 48px" }}>
         <p
+          className="cc-dm-mono-ui"
           style={{
             fontFamily: '"DM Mono", monospace',
             fontSize: "10px",
@@ -174,6 +173,7 @@ export default function ArtistProfilePage() {
             }}
           >
             <p
+              className="cc-dm-mono-ui"
               style={{
                 fontFamily: '"DM Mono", monospace',
                 fontSize: "10px",
@@ -239,6 +239,7 @@ export default function ArtistProfilePage() {
               </p>
               <hr style={{ border: "none", borderTop: "0.5px solid var(--page-border)", marginBottom: "28px" }} />
               <p
+                className="cc-dm-mono-ui"
                 style={{
                   fontFamily: '"DM Mono", monospace',
                   fontSize: "10px",
@@ -263,6 +264,7 @@ export default function ArtistProfilePage() {
               </p>
               <button
                 type="button"
+                className="cc-dm-mono-ui"
                 style={{
                   marginTop: "20px",
                   background: "none",

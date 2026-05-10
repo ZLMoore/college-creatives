@@ -64,7 +64,7 @@ export function ArtistArtworkBlock({ artwork, artistName, imageOnLeft, showDraft
     <div className="flex min-h-[500px] flex-col justify-center bg-white p-16 max-md:p-10 md:min-h-[500px]">
       {showDraftBadge ? (
         <p
-          className="mb-3 inline-flex w-fit bg-[#F5A623]/20 px-2 py-1 text-[10px] font-medium uppercase tracking-[0.15em] text-[#12172A]"
+          className="mb-3 inline-flex w-fit bg-[#F5A623]/20 px-2 py-1 text-[10px] font-medium uppercase tracking-[0.15em] text-[#12172A] max-md:text-[11px] max-md:tracking-[0.05em]"
           style={{ fontFamily: '"DM Mono", monospace' }}
         >
           Preview · not published
@@ -76,7 +76,7 @@ export function ArtistArtworkBlock({ artwork, artistName, imageOnLeft, showDraft
       </p>
       <hr className="my-6 border-0 border-t border-solid border-[#E0DDD8]" style={{ borderTopWidth: "0.5px" }} />
       <p
-        className="mb-3 text-[10px] font-normal uppercase tracking-[3px] text-[#F5A623]"
+        className="mb-3 text-[10px] font-normal uppercase tracking-[3px] text-[#F5A623] max-md:text-[11px] max-md:tracking-[0.05em]"
         style={{ fontFamily: '"DM Mono", monospace' }}
       >
         Curator&apos;s note
@@ -102,7 +102,7 @@ export function ArtistArtworkBlock({ artwork, artistName, imageOnLeft, showDraft
           setShowForm((v) => !v);
           setFeedback("idle");
         }}
-        className="mt-4 w-fit cursor-pointer border-0 bg-transparent p-0 text-left text-[11px] text-[#7A7670] underline decoration-[#7A7670]/40 underline-offset-4 transition hover:text-[#12172A]"
+        className="mt-4 w-fit cursor-pointer border-0 bg-transparent p-0 text-left text-[11px] text-[#7A7670] underline decoration-[#7A7670]/40 underline-offset-4 transition hover:text-[#12172A] max-md:tracking-[0.05em]"
         style={{ fontFamily: '"DM Mono", monospace' }}
       >
         Request edit to this note →
