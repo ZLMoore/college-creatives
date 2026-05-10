@@ -208,27 +208,6 @@ export default function ArtistPortalPage() {
           </form>
         </section>
       </main>
-
-      <p
-        style={{
-          margin: 0,
-          padding: "1rem 0",
-          width: "100%",
-          fontSize: 13,
-          color: "rgba(255,255,255,.55)",
-          lineHeight: 1.7,
-          textAlign: "center",
-          fontFamily: '"DM Sans", sans-serif',
-        }}
-      >
-        Questions? Send us an email at{" "}
-        <a
-          href="mailto:contact@collegecreatives.store"
-          style={{ color: "#E8503A", textDecoration: "none", fontWeight: 600 }}
-        >
-          contact@collegecreatives.store
-        </a>
-      </p>
     </div>
   );
 }

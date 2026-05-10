@@ -29,13 +29,23 @@ export default function RootLayout({
             fontFamily: '"DM Sans", sans-serif',
             fontSize: 12,
             padding: "1rem 2rem",
-            display: "flex",
-            justifyContent: "space-between",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
             alignItems: "center",
+            gap: "1rem",
           }}
         >
-          <span>© 2025 College Creatives</span>
-          <span>collegecreatives.store</span>
+          <span style={{ textAlign: "left" }}>© 2025 College Creatives</span>
+          <span style={{ textAlign: "center" }}>
+            Questions?{" "}
+            <a
+              href="mailto:contact@collegecreatives.store"
+              style={{ color: "#E8503A", textDecoration: "none", fontWeight: 600 }}
+            >
+              contact@collegecreatives.store
+            </a>
+          </span>
+          <span style={{ textAlign: "right" }}>collegecreatives.store</span>
         </footer>
       </body>
     </html>
