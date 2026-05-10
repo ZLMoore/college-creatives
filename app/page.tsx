@@ -556,15 +556,15 @@ body { font-family: 'DM Sans', sans-serif; background: var(--page-bg); color: va
               {[
                 [
                   "Apply with your .edu email",
-                  "We verify you're an active student at an accredited university",
+                  "We verify you're an active student at an accredited university.",
                 ],
                 [
                   "Get approved by our team",
-                  "We review every application personally — no auto-approvals",
+                  "We review every application personally. No auto-approvals.",
                 ],
                 [
                   "Submit your artwork to us",
-                  "We handle listings, mockups and Printful product creation",
+                  "We handle production and shipping via Printful.",
                 ],
                 [
                   "Earn 90% of your markup",
