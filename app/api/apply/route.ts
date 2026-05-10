@@ -18,9 +18,23 @@ function escapeHtml(s: string) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, school, major, medium, bio, portfolio_url, preferred_name } = body;
+    const {
+      email,
+      school,
+      major,
+      medium,
+      bio,
+      portfolio_url,
+      preferred_name,
+      first_name,
+      last_name,
+    } = body;
 
-    if (!name || !email || !school || !major || !medium || !bio) {
+    const firstNorm = String(first_name ?? "").trim();
+    const lastNorm = String(last_name ?? "").trim();
+    const name = `${firstNorm} ${lastNorm}`.trim();
+
+    if (!firstNorm || !lastNorm || !email || !school || !major) {
       return NextResponse.json(
         { error: "Missing required application fields." },
         { status: 400 },
@@ -35,23 +49,28 @@ export async function POST(request: Request) {
       );
     }
 
-    const slug = await uniqueArtistSlug(String(name));
+    const slug = await uniqueArtistSlug(name);
 
     const preferredNorm =
       preferred_name != null && String(preferred_name).trim()
         ? String(preferred_name).trim()
         : null;
 
+    const bioNorm = bio != null && String(bio).trim() ? String(bio).trim() : "";
+    const mediumNorm = medium != null && String(medium).trim() ? String(medium).trim() : "";
+
     const { data, error } = await supabaseAdmin
       .from("artists")
       .insert({
         name,
+        first_name: firstNorm,
+        last_name: lastNorm,
         preferred_name: preferredNorm,
         email: emailNorm,
         school,
         major,
-        medium,
-        bio,
+        medium: mediumNorm,
+        bio: bioNorm,
         portfolio_url: portfolio_url || null,
         status: "pending",
         slug,
@@ -101,21 +120,29 @@ export async function POST(request: Request) {
         ? String(portfolio_url).trim()
         : null;
     const adminHtml = `
-<p><strong>Name:</strong> ${escapeHtml(String(name))}</p>
+<p><strong>Name:</strong> ${escapeHtml(name)}</p>
+<p><strong>First name:</strong> ${escapeHtml(firstNorm)}</p>
+<p><strong>Last name:</strong> ${escapeHtml(lastNorm)}</p>
 <p><strong>Preferred name:</strong> ${
       preferredNorm ? escapeHtml(preferredNorm) : "Not provided"
     }</p>
 <p><strong>Email:</strong> ${escapeHtml(emailNorm)}</p>
 <p><strong>School:</strong> ${escapeHtml(String(school))}</p>
 <p><strong>Major:</strong> ${escapeHtml(String(major))}</p>
-<p><strong>Medium:</strong> ${escapeHtml(String(medium))}</p>
+<p><strong>Medium:</strong> ${
+      mediumNorm ? escapeHtml(mediumNorm) : "Not provided"
+    }</p>
 <p><strong>Portfolio:</strong> ${
       portfolio
         ? `<a href="${escapeHtml(portfolio)}">${escapeHtml(portfolio)}</a>`
         : "Not provided"
     }</p>
 <p><strong>Bio:</strong></p>
-<p>${escapeHtml(String(bio)).replace(/\n/g, "<br />")}</p>
+<p>${
+      bioNorm
+        ? escapeHtml(bioNorm).replace(/\n/g, "<br />")
+        : "Not provided"
+    }</p>
 <p><strong>Review in Supabase:</strong> <a href="${ADMIN_REVIEW_URL}">${ADMIN_REVIEW_URL}</a></p>`;
 
     try {

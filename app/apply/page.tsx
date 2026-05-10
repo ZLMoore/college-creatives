@@ -7,7 +7,8 @@ import { isEduEmail } from "@/lib/edu";
 import { MEDIUM_OPTIONS } from "@/lib/medium-options";
 
 const initial = {
-  name: "",
+  first_name: "",
+  last_name: "",
   preferred_name: "",
   email: "",
   school: "",
@@ -19,33 +20,87 @@ const initial = {
 
 const APPLY_NAV_HEIGHT_PX = 58;
 
-type ApplyFieldKey = "name" | "email" | "school" | "major" | "medium" | "bio";
+type ApplyFieldKey = "first_name" | "last_name" | "email" | "school" | "major";
 
-const fieldErrorTextStyle: CSSProperties = {
-  margin: "4px 0 0",
-  fontSize: 12,
-  fontFamily: '"DM Sans", sans-serif',
-  color: "#F5A623",
+const fieldInputWrapStyle: CSSProperties = {
+  position: "relative",
+  width: "100%",
+  minWidth: 0,
 };
 
-function FieldInlineError({ message }: { message?: string }) {
+function FieldFloatingError({ message }: { message?: string }) {
   if (!message) return null;
   return (
-    <p style={fieldErrorTextStyle} role="alert">
-      ! {message}
-    </p>
+    <div
+      role="alert"
+      style={{
+        position: "absolute",
+        bottom: "calc(100% + 8px)",
+        left: 0,
+        zIndex: 10,
+        maxWidth: "100%",
+        boxSizing: "border-box",
+      }}
+    >
+      <div
+        style={{
+          position: "relative",
+          background: "rgba(18,23,42,0.85)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+          border: "1px solid rgba(247,244,239,0.15)",
+          borderRadius: 6,
+          padding: "6px 10px",
+          fontSize: 12,
+          fontFamily: '"DM Sans", sans-serif',
+          color: "#F7F4EF",
+        }}
+      >
+        <span style={{ color: "#F5A623" }} aria-hidden="true">
+          ⚠{" "}
+        </span>
+        {message}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            left: "50%",
+            bottom: -7,
+            transform: "translateX(-50%)",
+            width: 0,
+            height: 0,
+            borderLeft: "7px solid transparent",
+            borderRight: "7px solid transparent",
+            borderTop: "7px solid rgba(247,244,239,0.15)",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            left: "50%",
+            bottom: -6,
+            transform: "translateX(-50%)",
+            width: 0,
+            height: 0,
+            borderLeft: "6px solid transparent",
+            borderRight: "6px solid transparent",
+            borderTop: "6px solid rgba(18,23,42,0.85)",
+          }}
+        />
+      </div>
+    </div>
   );
 }
 
 function validateApplyForm(form: typeof initial): Partial<Record<ApplyFieldKey, string>> {
   const next: Partial<Record<ApplyFieldKey, string>> = {};
-  if (!form.name.trim()) next.name = "This field is required";
+  if (!form.first_name.trim()) next.first_name = "This field is required";
+  if (!form.last_name.trim()) next.last_name = "This field is required";
   if (!form.email.trim()) next.email = "This field is required";
   else if (!isEduEmail(form.email)) next.email = "Please use a valid .edu university email.";
   if (!form.school.trim()) next.school = "This field is required";
   if (!form.major.trim()) next.major = "This field is required";
-  if (!form.medium.trim()) next.medium = "This field is required";
-  if (!form.bio.trim()) next.bio = "This field is required";
   return next;
 }
 
@@ -100,17 +155,21 @@ export default function ApplyPage() {
     }
     setErrors({});
     setLoading(true);
+    const fn = form.first_name.trim();
+    const ln = form.last_name.trim();
     const res = await fetch("/api/apply", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        name: form.name,
+        name: `${fn} ${ln}`,
+        first_name: fn,
+        last_name: ln,
         preferred_name: form.preferred_name.trim() || null,
         email: form.email.trim().toLowerCase(),
         school: form.school,
         major: form.major,
-        medium: form.medium,
-        bio: form.bio,
+        medium: form.medium.trim(),
+        bio: form.bio.trim(),
         portfolio_url: form.portfolio_url || null,
       }),
     });
@@ -196,6 +255,11 @@ export default function ApplyPage() {
               cursor: wait;
               opacity: 0.6;
             }
+            .apply-name-block {
+              display: flex;
+              flex-direction: column;
+              gap: 1rem;
+            }
             .apply-name-row {
               display: flex;
               gap: 1rem;
@@ -203,6 +267,9 @@ export default function ApplyPage() {
             .apply-name-row .apply-name-field {
               flex: 1;
               min-width: 0;
+            }
+            .apply-name-field-full {
+              width: 100%;
             }
             @media (max-width: 900px) {
               .apply-name-row {
@@ -309,29 +376,55 @@ export default function ApplyPage() {
               gap: 16,
             }}
           >
-            <div className="apply-name-row">
-              <label className="apply-name-field" style={labelBlock}>
-                <span style={labelText}>
-                  Full Name <CoralRequiredStar />
-                </span>
-                <input
-                  value={form.name}
-                  onChange={(ev) => {
-                    setForm((p) => ({ ...p, name: ev.target.value }));
-                    setErrors((prev) => {
-                      const n = { ...prev };
-                      delete n.name;
-                      return n;
-                    });
-                  }}
-                  placeholder="e.g. Jane Doe"
-                  className="apply-form-field"
-                  style={inputStyleWithFieldError(inputStyle, !!errors.name)}
-                />
-                <FieldInlineError message={errors.name} />
-              </label>
-              <label className="apply-name-field" style={labelBlock}>
-                <span style={labelText}>Preferred name</span>
+            <div className="apply-name-block">
+              <div className="apply-name-row">
+                <label className="apply-name-field" style={labelBlock}>
+                  <span style={labelText}>
+                    First name <CoralRequiredStar />
+                  </span>
+                  <div style={fieldInputWrapStyle}>
+                    <FieldFloatingError message={errors.first_name} />
+                    <input
+                      value={form.first_name}
+                      onChange={(ev) => {
+                        setForm((p) => ({ ...p, first_name: ev.target.value }));
+                        setErrors((prev) => {
+                          const n = { ...prev };
+                          delete n.first_name;
+                          return n;
+                        });
+                      }}
+                      placeholder="e.g. Jane"
+                      className="apply-form-field"
+                      style={inputStyleWithFieldError(inputStyle, !!errors.first_name)}
+                    />
+                  </div>
+                </label>
+                <label className="apply-name-field" style={labelBlock}>
+                  <span style={labelText}>
+                    Last name <CoralRequiredStar />
+                  </span>
+                  <div style={fieldInputWrapStyle}>
+                    <FieldFloatingError message={errors.last_name} />
+                    <input
+                      value={form.last_name}
+                      onChange={(ev) => {
+                        setForm((p) => ({ ...p, last_name: ev.target.value }));
+                        setErrors((prev) => {
+                          const n = { ...prev };
+                          delete n.last_name;
+                          return n;
+                        });
+                      }}
+                      placeholder="e.g. Doe"
+                      className="apply-form-field"
+                      style={inputStyleWithFieldError(inputStyle, !!errors.last_name)}
+                    />
+                  </div>
+                </label>
+              </div>
+              <label className="apply-name-field-full" style={labelBlock}>
+                <span style={labelText}>Preferred name (optional)</span>
                 <input
                   value={form.preferred_name}
                   onChange={(ev) => setForm((p) => ({ ...p, preferred_name: ev.target.value }))}
@@ -345,91 +438,84 @@ export default function ApplyPage() {
               <span style={labelText}>
                 University Email <CoralRequiredStar />
               </span>
-              <input
-                type="email"
-                value={form.email}
-                onChange={(ev) => {
-                  setForm((p) => ({ ...p, email: ev.target.value }));
-                  setErrors((prev) => {
-                    const n = { ...prev };
-                    delete n.email;
-                    return n;
-                  });
-                }}
-                placeholder="you@university.edu"
-                className="apply-form-field"
-                style={inputStyleWithFieldError(inputStyle, !!errors.email)}
-              />
-              <FieldInlineError message={errors.email} />
+              <div style={fieldInputWrapStyle}>
+                <FieldFloatingError message={errors.email} />
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(ev) => {
+                    setForm((p) => ({ ...p, email: ev.target.value }));
+                    setErrors((prev) => {
+                      const n = { ...prev };
+                      delete n.email;
+                      return n;
+                    });
+                  }}
+                  placeholder="you@university.edu"
+                  className="apply-form-field"
+                  style={inputStyleWithFieldError(inputStyle, !!errors.email)}
+                />
+              </div>
             </label>
             <label style={labelBlock}>
               <span style={labelText}>
                 School <CoralRequiredStar />
               </span>
-              <input
-                value={form.school}
-                onChange={(ev) => {
-                  setForm((p) => ({ ...p, school: ev.target.value }));
-                  setErrors((prev) => {
-                    const n = { ...prev };
-                    delete n.school;
-                    return n;
-                  });
-                }}
-                placeholder="e.g. Boston University"
-                className="apply-form-field"
-                style={inputStyleWithFieldError(inputStyle, !!errors.school)}
-              />
-              <FieldInlineError message={errors.school} />
+              <div style={fieldInputWrapStyle}>
+                <FieldFloatingError message={errors.school} />
+                <input
+                  value={form.school}
+                  onChange={(ev) => {
+                    setForm((p) => ({ ...p, school: ev.target.value }));
+                    setErrors((prev) => {
+                      const n = { ...prev };
+                      delete n.school;
+                      return n;
+                    });
+                  }}
+                  placeholder="e.g. Boston University"
+                  className="apply-form-field"
+                  style={inputStyleWithFieldError(inputStyle, !!errors.school)}
+                />
+              </div>
             </label>
             <label style={labelBlock}>
               <span style={labelText}>
                 Major <CoralRequiredStar />
               </span>
-              <input
-                value={form.major}
-                onChange={(ev) => {
-                  setForm((p) => ({ ...p, major: ev.target.value }));
-                  setErrors((prev) => {
-                    const n = { ...prev };
-                    delete n.major;
-                    return n;
-                  });
-                }}
-                placeholder="e.g. Fine Arts"
-                className="apply-form-field"
-                style={inputStyleWithFieldError(inputStyle, !!errors.major)}
-              />
-              <FieldInlineError message={errors.major} />
+              <div style={fieldInputWrapStyle}>
+                <FieldFloatingError message={errors.major} />
+                <input
+                  value={form.major}
+                  onChange={(ev) => {
+                    setForm((p) => ({ ...p, major: ev.target.value }));
+                    setErrors((prev) => {
+                      const n = { ...prev };
+                      delete n.major;
+                      return n;
+                    });
+                  }}
+                  placeholder="e.g. Fine Arts"
+                  className="apply-form-field"
+                  style={inputStyleWithFieldError(inputStyle, !!errors.major)}
+                />
+              </div>
             </label>
             <label style={labelBlock}>
               <span style={labelText}>Art Style</span>
               <select
                 value={form.medium}
-                onChange={(ev) => {
-                  setForm((p) => ({ ...p, medium: ev.target.value }));
-                  setErrors((prev) => {
-                    const n = { ...prev };
-                    delete n.medium;
-                    return n;
-                  });
-                }}
+                onChange={(ev) => setForm((p) => ({ ...p, medium: ev.target.value }))}
                 className="apply-form-field"
-                style={inputStyleWithFieldError(
-                  { ...inputStyle, cursor: "pointer" },
-                  !!errors.medium,
-                )}
+                style={{ ...inputStyle, cursor: "pointer" }}
               >
-                <option value="" disabled>
-                  Select medium
-                </option>
+                <option value="">Select medium</option>
                 {MEDIUM_OPTIONS.map((m) => (
                   <option key={m} value={m}>
                     {m}
                   </option>
                 ))}
               </select>
-              <FieldInlineError message={errors.medium} />
             </label>
             <label style={labelBlock}>
               <span style={labelText}>Portfolio Link</span>
@@ -443,28 +529,15 @@ export default function ApplyPage() {
               />
             </label>
             <label style={labelBlock}>
-              <span style={labelText}>
-                Tell us about your work <CoralRequiredStar />
-              </span>
+              <span style={labelText}>Tell us about your work</span>
               <textarea
                 rows={5}
                 value={form.bio}
-                onChange={(ev) => {
-                  setForm((p) => ({ ...p, bio: ev.target.value }));
-                  setErrors((prev) => {
-                    const n = { ...prev };
-                    delete n.bio;
-                    return n;
-                  });
-                }}
+                onChange={(ev) => setForm((p) => ({ ...p, bio: ev.target.value }))}
                 placeholder="What inspires you?"
                 className="apply-form-field"
-                style={inputStyleWithFieldError(
-                  { ...inputStyle, resize: "vertical", minHeight: 120 },
-                  !!errors.bio,
-                )}
+                style={{ ...inputStyle, resize: "vertical", minHeight: 120 }}
               />
-              <FieldInlineError message={errors.bio} />
             </label>
             {error ? <p style={{ margin: 0, color: "#E8503A", fontSize: 14 }}>{error}</p> : null}
             {status ? <p style={{ margin: 0, color: "#3BAFD4", fontSize: 14 }}>{status}</p> : null}

@@ -99,7 +99,6 @@ export const ApplyForm = () => {
       <label className="grid gap-2 text-sm font-semibold text-navy">
         Artist Bio
         <textarea
-          required
           rows={6}
           value={form.bio}
           onChange={(event) => setForm((prev) => ({ ...prev, bio: event.target.value }))}
