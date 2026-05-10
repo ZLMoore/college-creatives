@@ -348,7 +348,7 @@ export default function ApplyPage() {
                   maxWidth: 440,
                 }}
               >
-                We handle printing, shipping, and payments. You set your price and keep 90% of your markup.
+                We handle printing, shipping, and payments. You set your price.
               </p>
             </div>
           </div>
@@ -529,7 +529,7 @@ export default function ApplyPage() {
               />
             </label>
             <label style={labelBlock}>
-              <span style={labelText}>Tell us about your work</span>
+              <span style={labelText}>About you</span>
               <textarea
                 rows={5}
                 value={form.bio}
