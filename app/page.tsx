@@ -542,7 +542,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--page-bg); color: va
         </section>
       ) : null}
 
-      <section id="faq" className="cc-mission-split">
+      <div id="faq" style={{ position: "relative", top: "-80px" }} />
+      <section className="cc-mission-split">
         <div className="cc-mission-left">
           <div className="cc-mission-left-inner">
             <p className="cc-process-label">THE PROCESS</p>
