@@ -252,7 +252,7 @@ export default function ApplyPage() {
                 required
                 value={form.name}
                 onChange={(ev) => setForm((p) => ({ ...p, name: ev.target.value }))}
-                placeholder="Your full name"
+                placeholder="e.g. Jane Doe"
                 className="apply-form-field"
                 style={inputStyle}
               />
@@ -292,7 +292,7 @@ export default function ApplyPage() {
               />
             </label>
             <label style={labelBlock}>
-              <span style={labelText}>Medium / Style</span>
+              <span style={labelText}>Art Style</span>
               <select
                 required
                 value={form.medium}
