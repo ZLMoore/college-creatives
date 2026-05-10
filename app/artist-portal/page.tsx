@@ -76,24 +76,6 @@ export default function ArtistPortalPage() {
           cursor: wait;
           opacity: 0.6;
         }
-        .artist-portal-apply-ghost {
-          display: inline-block;
-          background: transparent;
-          color: #fff;
-          border: 1px solid rgba(255, 255, 255, 0.4);
-          border-radius: 40px;
-          padding: 14px 32px;
-          font-size: 14px;
-          font-weight: 500;
-          font-family: 'DM Sans', sans-serif;
-          text-decoration: none;
-          transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-        }
-        .artist-portal-apply-ghost:hover {
-          background: rgba(255, 255, 255, 0.1);
-          border-color: #fff;
-          color: #fff;
-        }
       `}</style>
       <SiteHeader />
 
@@ -208,54 +190,45 @@ export default function ArtistPortalPage() {
               {loading ? "Redirecting..." : "Access my dashboard →"}
             </button>
 
-            <div
-              style={{
-                ...fieldWidth,
-                marginTop: 32,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 12,
-              }}
-            >
-              <p
-                style={{
-                  margin: 0,
-                  fontFamily: '"DM Mono", monospace',
-                  fontSize: 10,
-                  color: "rgba(255,255,255,.5)",
-                  textTransform: "uppercase",
-                  letterSpacing: 1.3,
-                }}
-              >
-                Not an artist yet?
-              </p>
-              <Link href="/apply" className="artist-portal-apply-ghost">
-                Apply to join →
-              </Link>
-            </div>
-
             <p
               style={{
                 ...fieldWidth,
-                margin: "20px 0 0",
+                margin: "32px 0 0",
                 fontSize: 13,
                 color: "rgba(255,255,255,.55)",
                 lineHeight: 1.7,
                 textAlign: "center",
               }}
             >
-              Not approved yet? Send us an email at{" "}
-              <a
-                href="mailto:contact@collegecreatives.store"
-                style={{ color: "#E8503A", textDecoration: "none", fontWeight: 600 }}
-              >
-                contact@collegecreatives.store
-              </a>
+              Not an artist yet?{" "}
+              <Link href="/apply" style={{ color: "#3BAFD4", textDecoration: "none", fontWeight: 600 }}>
+                Apply to join →
+              </Link>
             </p>
           </form>
         </section>
       </main>
+
+      <p
+        style={{
+          margin: 0,
+          padding: "1rem 0",
+          width: "100%",
+          fontSize: 13,
+          color: "rgba(255,255,255,.55)",
+          lineHeight: 1.7,
+          textAlign: "center",
+          fontFamily: '"DM Sans", sans-serif',
+        }}
+      >
+        Questions? Send us an email at{" "}
+        <a
+          href="mailto:contact@collegecreatives.store"
+          style={{ color: "#E8503A", textDecoration: "none", fontWeight: 600 }}
+        >
+          contact@collegecreatives.store
+        </a>
+      </p>
     </div>
   );
 }
