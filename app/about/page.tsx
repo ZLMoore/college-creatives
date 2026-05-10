@@ -100,7 +100,7 @@ export default function MissionPage() {
                 margin: "0 0 1rem",
                 fontFamily: '"Playfair Display", serif',
                 fontStyle: "italic",
-                fontSize: 33,
+                fontSize: 27,
                 lineHeight: 1.75,
                 color: "var(--page-text)",
               }}
