@@ -55,30 +55,42 @@ export default function MissionPage() {
           textAlign: "center",
         }}
       >
+        <p
+          style={{
+            margin: "0 0 14px",
+            fontFamily: '"DM Mono", monospace',
+            fontSize: 11,
+            letterSpacing: 3,
+            color: "#fff",
+            textTransform: "uppercase",
+          }}
+        >
+          OUR STORY
+        </p>
         <h1
           style={{
             margin: "0 auto",
             maxWidth: 980,
             fontFamily: '"Playfair Display", serif',
-            fontSize: "2rem",
+            fontSize: "2.8rem",
             lineHeight: 1.08,
             letterSpacing: "-0.5px",
           }}
         >
-          <span style={{ color: "#F7F4EF" }}>Founded on </span>
+          <span style={{ color: "#fff" }}>Founded on </span>
           <span style={{ color: "#F5A623", fontStyle: "italic" }}>creativity.</span>
         </h1>
       </section>
 
       <main style={{ maxWidth: 820, margin: "0 auto", padding: "3.5rem 2rem 3rem" }}>
         <section>
-          <p style={{ margin: "0 0 1.25rem", fontSize: 18, lineHeight: 1.75, color: "var(--page-text)" }}>
-            College Creatives began with a simple observation: many students pursuing rigorous academic paths quietly
-            leave parts of themselves behind.
+          <p style={{ margin: "0 0 1rem", fontSize: 16, lineHeight: 1.7, color: "var(--page-text)" }}>
+            College Creatives began with a simple observation: many students pursuing rigorous academic paths quietly leave
+            parts of themselves behind.
           </p>
-          <p style={{ margin: "0 0 1.25rem", fontSize: 18, lineHeight: 1.75, color: "var(--page-text)" }}>
-            For many young adults pursuing higher education, that tension feels deeply familiar. Creativity remains central
-            to their identity. What was missing was a space where both could exist together without compromise.
+          <p style={{ margin: "0 0 1rem", fontSize: 16, lineHeight: 1.7, color: "var(--page-text)" }}>
+            For many young adults pursuing higher education, that tension feels deeply familiar. Creativity remains central to
+            their identity. What was missing was a space where both could exist together without compromise.
           </p>
           <section
             style={{ maxWidth: 820, margin: "1.5rem auto", paddingLeft: 18, borderLeft: "3px solid #F5A623" }}
@@ -98,14 +110,14 @@ export default function MissionPage() {
             </p>
             <p style={{ margin: "0", fontSize: 14, fontStyle: "normal", color: "#F5A623" }}>— Our Founder</p>
           </section>
-          <p style={{ margin: "0 0 1.25rem", fontSize: 18, lineHeight: 1.75, color: "var(--page-text)" }}>
-            We present to you a curated platform where college students can earn passive income while pursuing demanding
-            careers in STEM and other professional fields.
+          <p style={{ margin: "0 0 1rem", fontSize: 16, lineHeight: 1.7, color: "var(--page-text)" }}>
+            We present to you a curated platform where college students can earn passive income while pursuing demanding careers
+            in STEM and other professional fields.
           </p>
-          <p style={{ margin: "0 0 1.25rem", fontSize: 18, lineHeight: 1.75, color: "var(--page-text)" }}>
-            Artists apply using a verified .edu email and undergo a review process before joining the platform. Once
-            approved, they upload their work, set their prices, and fulfill orders through Printful&apos;s print-on-demand
-            infrastructure, with direct payouts through Stripe.
+          <p style={{ margin: "0 0 1rem", fontSize: 16, lineHeight: 1.7, color: "var(--page-text)" }}>
+            Artists apply using a verified .edu email and undergo a review process before joining the platform. Once approved,
+            they upload their work, set their prices, and fulfill orders through Printful&apos;s print-on-demand infrastructure,
+            with direct payouts through Stripe.
           </p>
           <div className="cc-about-scroll" aria-hidden>
             <span className="cc-about-scroll-text">Scroll</span>
