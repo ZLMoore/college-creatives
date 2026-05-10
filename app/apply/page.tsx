@@ -135,7 +135,7 @@ export default function ApplyPage() {
               padding: 14px;
               font-size: 14px;
               font-weight: 600;
-              font-family: "DM Sans", sans-serif;
+              font-family: 'DM Sans', sans-serif;
               cursor: pointer;
               transition: background 0.2s ease, color 0.2s ease;
             }
