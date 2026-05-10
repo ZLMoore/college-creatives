@@ -40,7 +40,7 @@ export const SiteHeader = () => (
         border-radius: 40px;
         font-size: 12px;
         font-weight: 500;
-        font-family: "DM Sans", sans-serif;
+        font-family: 'DM Sans', sans-serif;
         text-decoration: none;
         z-index: 1;
         white-space: nowrap;
