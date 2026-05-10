@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { Fragment } from "react";
 import Link from "next/link";
 
 const linkStyle: CSSProperties = {
@@ -23,13 +24,18 @@ type SiteHeaderProps = {
   hideApplyCta?: boolean;
 };
 
+const HEADER_HEIGHT_PX = 58;
+
 export const SiteHeader = ({ hideApplyCta }: SiteHeaderProps = {}) => (
+  <Fragment>
   <header
     style={{
       background: "#12172A",
-      height: "58px",
-      position: "sticky",
+      height: `${HEADER_HEIGHT_PX}px`,
+      position: "fixed",
       top: 0,
+      left: 0,
+      right: 0,
       zIndex: 200,
       width: "100%",
       margin: 0,
@@ -64,7 +70,7 @@ export const SiteHeader = ({ hideApplyCta }: SiteHeaderProps = {}) => (
         alignItems: "center",
         justifyContent: "space-between",
         padding: "0 48px",
-        height: "58px",
+        height: `${HEADER_HEIGHT_PX}px`,
         width: "100%",
         boxSizing: "border-box",
         margin: 0,
@@ -119,4 +125,13 @@ export const SiteHeader = ({ hideApplyCta }: SiteHeaderProps = {}) => (
       )}
     </nav>
   </header>
+  <div
+    aria-hidden
+    style={{
+      height: `${HEADER_HEIGHT_PX}px`,
+      flexShrink: 0,
+      width: "100%",
+    }}
+  />
+  </Fragment>
 );
