@@ -550,23 +550,6 @@ export default function ApplyPage() {
           </form>
           </div>
       </main>
-
-      <footer
-        style={{
-          background: "#080C14",
-          padding: "24px 48px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 12,
-          flexWrap: "wrap",
-        }}
-      >
-        <span style={{ fontFamily: '"Playfair Display", serif', fontSize: 15, color: "rgba(255,255,255,.3)" }}>
-          College Creatives
-        </span>
-        <span style={{ fontSize: 11, color: "rgba(255,255,255,.2)" }}>© 2025 · collegecreatives.store</span>
-      </footer>
     </div>
   );
 }

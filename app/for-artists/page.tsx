@@ -210,21 +210,6 @@ export default function ForArtistsPage() {
           </form>
         </section>
       </main>
-
-      <footer
-        style={{
-          background: "#080C14",
-          padding: "24px 48px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <span style={{ fontFamily: '"Playfair Display", serif', fontSize: "15px", color: "rgba(255,255,255,0.3)" }}>
-          College Creatives
-        </span>
-        <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.2)" }}>© 2025 · collegecreatives.store</span>
-      </footer>
     </div>
   );
 }

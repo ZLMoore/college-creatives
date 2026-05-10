@@ -364,10 +364,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--page-bg); color: va
 .cc-newsletter-feedback.ok { color:#3BAFD4; }
 .cc-newsletter-feedback.err { color:#E8503A; }
 
-.cc-footer { background:#080C14; padding:24px 48px; display:flex; justify-content:space-between; align-items:center; }
-.cc-footer-left { font-family:'Playfair Display',serif; font-size:15px; color:rgba(255,255,255,.3); }
-.cc-footer-right { font-size:11px; color:rgba(255,255,255,.2); }
-
 @media (max-width:900px) {
   .cc-hero h1 { font-size:42px; letter-spacing:-1px; }
   .cc-hero-sub { font-size:clamp(8px, 2.8vw, 15px); padding:0 12px; box-sizing:border-box; }
@@ -658,11 +654,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--page-bg); color: va
           <p className="cc-newsletter-feedback err">Something went wrong. Please try again.</p>
         ) : null}
       </section>
-
-      <footer className="cc-footer">
-        <span className="cc-footer-left">College Creatives</span>
-        <span className="cc-footer-right">© 2025 · collegecreatives.store</span>
-      </footer>
     </>
   );
 }
