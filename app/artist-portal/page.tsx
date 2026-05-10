@@ -5,7 +5,7 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 
-export default function ForArtistsPage() {
+export default function ArtistPortalPage() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -51,7 +51,7 @@ export default function ForArtistsPage() {
       }}
     >
       <style>{`
-        .for-artists-dashboard-btn {
+        .artist-portal-dashboard-btn {
           width: 100%;
           max-width: 480px;
           margin-left: auto;
@@ -68,13 +68,31 @@ export default function ForArtistsPage() {
           cursor: pointer;
           transition: background 0.2s ease, color 0.2s ease;
         }
-        .for-artists-dashboard-btn:hover:not(:disabled) {
+        .artist-portal-dashboard-btn:hover:not(:disabled) {
           background: #e8503a;
           color: #fff;
         }
-        .for-artists-dashboard-btn:disabled {
+        .artist-portal-dashboard-btn:disabled {
           cursor: wait;
           opacity: 0.6;
+        }
+        .artist-portal-apply-ghost {
+          display: inline-block;
+          background: transparent;
+          color: #fff;
+          border: 1px solid rgba(255, 255, 255, 0.4);
+          border-radius: 40px;
+          padding: 14px 32px;
+          font-size: 14px;
+          font-weight: 500;
+          font-family: 'DM Sans', sans-serif;
+          text-decoration: none;
+          transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+        .artist-portal-apply-ghost:hover {
+          background: rgba(255, 255, 255, 0.1);
+          border-color: #fff;
+          color: #fff;
         }
       `}</style>
       <SiteHeader />
@@ -186,7 +204,7 @@ export default function ForArtistsPage() {
             {error ? (
               <p style={{ ...fieldWidth, margin: 0, color: "#E8503A", fontSize: 14, textAlign: "left" }}>{error}</p>
             ) : null}
-            <button type="submit" disabled={loading} className="for-artists-dashboard-btn">
+            <button type="submit" disabled={loading} className="artist-portal-dashboard-btn">
               {loading ? "Redirecting..." : "Access my dashboard →"}
             </button>
 
@@ -212,7 +230,7 @@ export default function ForArtistsPage() {
               >
                 Not an artist yet?
               </p>
-              <Link href="/apply" className="for-artists-apply-ghost">
+              <Link href="/apply" className="artist-portal-apply-ghost">
                 Apply to join →
               </Link>
             </div>

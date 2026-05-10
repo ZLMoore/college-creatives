@@ -110,7 +110,7 @@ export const SiteHeader = () => (
         </Link>
       </div>
 
-      <Link href="/for-artists" className="cc-header-apply-btn">
+      <Link href="/artist-portal" className="cc-header-apply-btn">
         Artist Portal
       </Link>
     </nav>
