@@ -3,7 +3,6 @@
 import type { CSSProperties } from "react";
 import { FormEvent, useEffect, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
-import { isEduEmail } from "@/lib/edu";
 import { MEDIUM_OPTIONS } from "@/lib/medium-options";
 
 const initial = {
@@ -19,95 +18,6 @@ const initial = {
 };
 
 const APPLY_NAV_HEIGHT_PX = 58;
-
-type ApplyFieldKey = "first_name" | "last_name" | "email" | "school" | "major";
-
-const fieldInputWrapStyle: CSSProperties = {
-  position: "relative",
-  width: "100%",
-  minWidth: 0,
-};
-
-function FieldFloatingError({ message }: { message?: string }) {
-  if (!message) return null;
-  return (
-    <div
-      role="alert"
-      style={{
-        position: "absolute",
-        bottom: "calc(100% + 8px)",
-        left: 0,
-        zIndex: 10,
-        maxWidth: "100%",
-        boxSizing: "border-box",
-      }}
-    >
-      <div
-        style={{
-          position: "relative",
-          background: "rgba(18,23,42,0.85)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-          border: "1px solid rgba(247,244,239,0.15)",
-          borderRadius: 6,
-          padding: "6px 10px",
-          fontSize: 12,
-          fontFamily: '"DM Sans", sans-serif',
-          color: "#F7F4EF",
-        }}
-      >
-        <span style={{ color: "#F5A623" }} aria-hidden="true">
-          ⚠{" "}
-        </span>
-        {message}
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            left: "50%",
-            bottom: -7,
-            transform: "translateX(-50%)",
-            width: 0,
-            height: 0,
-            borderLeft: "7px solid transparent",
-            borderRight: "7px solid transparent",
-            borderTop: "7px solid rgba(247,244,239,0.15)",
-          }}
-        />
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            left: "50%",
-            bottom: -6,
-            transform: "translateX(-50%)",
-            width: 0,
-            height: 0,
-            borderLeft: "6px solid transparent",
-            borderRight: "6px solid transparent",
-            borderTop: "6px solid rgba(18,23,42,0.85)",
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
-function validateApplyForm(form: typeof initial): Partial<Record<ApplyFieldKey, string>> {
-  const next: Partial<Record<ApplyFieldKey, string>> = {};
-  if (!form.first_name.trim()) next.first_name = "This field is required";
-  if (!form.last_name.trim()) next.last_name = "This field is required";
-  if (!form.email.trim()) next.email = "This field is required";
-  else if (!isEduEmail(form.email)) next.email = "Please use a valid .edu university email.";
-  if (!form.school.trim()) next.school = "This field is required";
-  if (!form.major.trim()) next.major = "This field is required";
-  return next;
-}
-
-function inputStyleWithFieldError(base: CSSProperties, hasError: boolean): CSSProperties {
-  if (!hasError) return base;
-  return { ...base, border: "1px solid #E8503A" };
-}
 
 function CoralRequiredStar() {
   return (
@@ -126,7 +36,6 @@ function applyHeroImageFor(isDark: boolean, isWinter: boolean): string {
 
 export default function ApplyPage() {
   const [form, setForm] = useState(initial);
-  const [errors, setErrors] = useState<Partial<Record<ApplyFieldKey, string>>>({});
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
@@ -148,12 +57,6 @@ export default function ApplyPage() {
     e.preventDefault();
     setError("");
     setStatus("");
-    const nextErrors = validateApplyForm(form);
-    if (Object.keys(nextErrors).length > 0) {
-      setErrors(nextErrors);
-      return;
-    }
-    setErrors({});
     setLoading(true);
     const fn = form.first_name.trim();
     const ln = form.last_name.trim();
@@ -180,7 +83,6 @@ export default function ApplyPage() {
       return;
     }
     setForm(initial);
-    setErrors({});
     setStatus("Application received. Check your email for confirmation.");
   };
 
@@ -366,7 +268,6 @@ export default function ApplyPage() {
             }}
           >
           <form
-            noValidate
             onSubmit={onSubmit}
             style={{
               width: "100%",
@@ -382,45 +283,27 @@ export default function ApplyPage() {
                   <span style={labelText}>
                     First name <CoralRequiredStar />
                   </span>
-                  <div style={fieldInputWrapStyle}>
-                    <FieldFloatingError message={errors.first_name} />
-                    <input
-                      value={form.first_name}
-                      onChange={(ev) => {
-                        setForm((p) => ({ ...p, first_name: ev.target.value }));
-                        setErrors((prev) => {
-                          const n = { ...prev };
-                          delete n.first_name;
-                          return n;
-                        });
-                      }}
-                      placeholder="e.g. Jane"
-                      className="apply-form-field"
-                      style={inputStyleWithFieldError(inputStyle, !!errors.first_name)}
-                    />
-                  </div>
+                  <input
+                    required
+                    value={form.first_name}
+                    onChange={(ev) => setForm((p) => ({ ...p, first_name: ev.target.value }))}
+                    placeholder="e.g. Jane"
+                    className="apply-form-field"
+                    style={inputStyle}
+                  />
                 </label>
                 <label className="apply-name-field" style={labelBlock}>
                   <span style={labelText}>
                     Last name <CoralRequiredStar />
                   </span>
-                  <div style={fieldInputWrapStyle}>
-                    <FieldFloatingError message={errors.last_name} />
-                    <input
-                      value={form.last_name}
-                      onChange={(ev) => {
-                        setForm((p) => ({ ...p, last_name: ev.target.value }));
-                        setErrors((prev) => {
-                          const n = { ...prev };
-                          delete n.last_name;
-                          return n;
-                        });
-                      }}
-                      placeholder="e.g. Doe"
-                      className="apply-form-field"
-                      style={inputStyleWithFieldError(inputStyle, !!errors.last_name)}
-                    />
-                  </div>
+                  <input
+                    required
+                    value={form.last_name}
+                    onChange={(ev) => setForm((p) => ({ ...p, last_name: ev.target.value }))}
+                    placeholder="e.g. Doe"
+                    className="apply-form-field"
+                    style={inputStyle}
+                  />
                 </label>
               </div>
               <label className="apply-name-field-full" style={labelBlock}>
@@ -438,68 +321,41 @@ export default function ApplyPage() {
               <span style={labelText}>
                 University Email <CoralRequiredStar />
               </span>
-              <div style={fieldInputWrapStyle}>
-                <FieldFloatingError message={errors.email} />
-                <input
-                  type="email"
-                  value={form.email}
-                  onChange={(ev) => {
-                    setForm((p) => ({ ...p, email: ev.target.value }));
-                    setErrors((prev) => {
-                      const n = { ...prev };
-                      delete n.email;
-                      return n;
-                    });
-                  }}
-                  placeholder="you@university.edu"
-                  className="apply-form-field"
-                  style={inputStyleWithFieldError(inputStyle, !!errors.email)}
-                />
-              </div>
+              <input
+                required
+                type="email"
+                value={form.email}
+                onChange={(ev) => setForm((p) => ({ ...p, email: ev.target.value }))}
+                placeholder="you@university.edu"
+                className="apply-form-field"
+                style={inputStyle}
+              />
             </label>
             <label style={labelBlock}>
               <span style={labelText}>
                 School <CoralRequiredStar />
               </span>
-              <div style={fieldInputWrapStyle}>
-                <FieldFloatingError message={errors.school} />
-                <input
-                  value={form.school}
-                  onChange={(ev) => {
-                    setForm((p) => ({ ...p, school: ev.target.value }));
-                    setErrors((prev) => {
-                      const n = { ...prev };
-                      delete n.school;
-                      return n;
-                    });
-                  }}
-                  placeholder="e.g. Boston University"
-                  className="apply-form-field"
-                  style={inputStyleWithFieldError(inputStyle, !!errors.school)}
-                />
-              </div>
+              <input
+                required
+                value={form.school}
+                onChange={(ev) => setForm((p) => ({ ...p, school: ev.target.value }))}
+                placeholder="e.g. Boston University"
+                className="apply-form-field"
+                style={inputStyle}
+              />
             </label>
             <label style={labelBlock}>
               <span style={labelText}>
                 Major <CoralRequiredStar />
               </span>
-              <div style={fieldInputWrapStyle}>
-                <FieldFloatingError message={errors.major} />
-                <input
-                  value={form.major}
-                  onChange={(ev) => {
-                    setForm((p) => ({ ...p, major: ev.target.value }));
-                    setErrors((prev) => {
-                      const n = { ...prev };
-                      delete n.major;
-                      return n;
-                    });
-                  }}
-                  placeholder="e.g. Fine Arts"
-                  className="apply-form-field"
-                  style={inputStyleWithFieldError(inputStyle, !!errors.major)}
-                />
-              </div>
+              <input
+                required
+                value={form.major}
+                onChange={(ev) => setForm((p) => ({ ...p, major: ev.target.value }))}
+                placeholder="e.g. Fine Arts"
+                className="apply-form-field"
+                style={inputStyle}
+              />
             </label>
             <label style={labelBlock}>
               <span style={labelText}>Art Style</span>
