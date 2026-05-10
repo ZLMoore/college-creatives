@@ -424,7 +424,7 @@ export default function ApplyPage() {
                 </label>
               </div>
               <label className="apply-name-field-full" style={labelBlock}>
-                <span style={labelText}>Preferred name (optional)</span>
+                <span style={labelText}>Preferred name</span>
                 <input
                   value={form.preferred_name}
                   onChange={(ev) => setForm((p) => ({ ...p, preferred_name: ev.target.value }))}
