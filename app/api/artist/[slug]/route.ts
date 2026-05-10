@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { createSupabaseAdminForServer } from "@/lib/supabase";
 
+function looksLikeArtistUuid(segment: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(segment.trim());
+}
+
 export async function GET(_request: Request, { params }: { params: { slug: string } }) {
   const slug = decodeURIComponent(params.slug ?? "").trim();
   if (!slug) {
@@ -13,12 +17,14 @@ export async function GET(_request: Request, { params }: { params: { slug: strin
   }
 
   try {
-    const { data: artistRow, error: artistError } = await admin
+    const byId = looksLikeArtistUuid(slug);
+    const artistQuery = admin
       .from("artists")
       .select("*")
-      .eq("slug", slug)
       .eq("status", "approved")
-      .maybeSingle();
+      .eq(byId ? "id" : "slug", slug);
+
+    const { data: artistRow, error: artistError } = await artistQuery.maybeSingle();
 
     if (artistError || !artistRow) {
       return NextResponse.json({ error: "not_found" }, { status: 404 });
