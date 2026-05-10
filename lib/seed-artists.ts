@@ -155,6 +155,7 @@ export async function seedDemoArtists(client: SupabaseClient): Promise<SeedDemoR
         .from("artists")
         .insert({
           name: a.name,
+          preferred_name: null,
           email: a.email,
           school: a.school,
           major: a.major,

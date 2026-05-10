@@ -8,6 +8,7 @@ import { MEDIUM_OPTIONS } from "@/lib/medium-options";
 
 const initial = {
   name: "",
+  preferred_name: "",
   email: "",
   school: "",
   major: "",
@@ -18,6 +19,49 @@ const initial = {
 
 const APPLY_NAV_HEIGHT_PX = 58;
 
+type ApplyFieldKey = "name" | "email" | "school" | "major" | "medium" | "bio";
+
+const fieldErrorTextStyle: CSSProperties = {
+  margin: "4px 0 0",
+  fontSize: 12,
+  fontFamily: '"DM Sans", sans-serif',
+  color: "#F5A623",
+};
+
+function FieldInlineError({ message }: { message?: string }) {
+  if (!message) return null;
+  return (
+    <p style={fieldErrorTextStyle} role="alert">
+      ! {message}
+    </p>
+  );
+}
+
+function validateApplyForm(form: typeof initial): Partial<Record<ApplyFieldKey, string>> {
+  const next: Partial<Record<ApplyFieldKey, string>> = {};
+  if (!form.name.trim()) next.name = "This field is required";
+  if (!form.email.trim()) next.email = "This field is required";
+  else if (!isEduEmail(form.email)) next.email = "Please use a valid .edu university email.";
+  if (!form.school.trim()) next.school = "This field is required";
+  if (!form.major.trim()) next.major = "This field is required";
+  if (!form.medium.trim()) next.medium = "This field is required";
+  if (!form.bio.trim()) next.bio = "This field is required";
+  return next;
+}
+
+function inputStyleWithFieldError(base: CSSProperties, hasError: boolean): CSSProperties {
+  if (!hasError) return base;
+  return { ...base, border: "1px solid #E8503A" };
+}
+
+function CoralRequiredStar() {
+  return (
+    <span style={{ color: "#E8503A" }} aria-hidden="true">
+      *
+    </span>
+  );
+}
+
 function applyHeroImageFor(isDark: boolean, isWinter: boolean): string {
   if (isWinter) {
     return isDark ? "/images/night_college_snow_aerial.png" : "/images/day_college_snow_aerial.png";
@@ -27,6 +71,7 @@ function applyHeroImageFor(isDark: boolean, isWinter: boolean): string {
 
 export default function ApplyPage() {
   const [form, setForm] = useState(initial);
+  const [errors, setErrors] = useState<Partial<Record<ApplyFieldKey, string>>>({});
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
@@ -48,16 +93,19 @@ export default function ApplyPage() {
     e.preventDefault();
     setError("");
     setStatus("");
-    if (!isEduEmail(form.email)) {
-      setError("Please use a valid .edu university email.");
+    const nextErrors = validateApplyForm(form);
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
       return;
     }
+    setErrors({});
     setLoading(true);
     const res = await fetch("/api/apply", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name: form.name,
+        preferred_name: form.preferred_name.trim() || null,
         email: form.email.trim().toLowerCase(),
         school: form.school,
         major: form.major,
@@ -73,6 +121,7 @@ export default function ApplyPage() {
       return;
     }
     setForm(initial);
+    setErrors({});
     setStatus("Application received. Check your email for confirmation.");
   };
 
@@ -91,7 +140,7 @@ export default function ApplyPage() {
         fontFamily: '"DM Sans", sans-serif',
       }}
     >
-      <SiteHeader />
+      <SiteHeader hideApplyCta />
 
       <main
         className="apply-split"
@@ -146,6 +195,19 @@ export default function ApplyPage() {
             .apply-submit-btn:disabled {
               cursor: wait;
               opacity: 0.6;
+            }
+            .apply-name-row {
+              display: flex;
+              gap: 1rem;
+            }
+            .apply-name-row .apply-name-field {
+              flex: 1;
+              min-width: 0;
+            }
+            @media (max-width: 900px) {
+              .apply-name-row {
+                flex-direction: column;
+              }
             }
           `}</style>
           <div
@@ -237,6 +299,7 @@ export default function ApplyPage() {
             }}
           >
           <form
+            noValidate
             onSubmit={onSubmit}
             style={{
               width: "100%",
@@ -246,59 +309,116 @@ export default function ApplyPage() {
               gap: 16,
             }}
           >
+            <div className="apply-name-row">
+              <label className="apply-name-field" style={labelBlock}>
+                <span style={labelText}>
+                  Full Name <CoralRequiredStar />
+                </span>
+                <input
+                  value={form.name}
+                  onChange={(ev) => {
+                    setForm((p) => ({ ...p, name: ev.target.value }));
+                    setErrors((prev) => {
+                      const n = { ...prev };
+                      delete n.name;
+                      return n;
+                    });
+                  }}
+                  placeholder="e.g. Jane Doe"
+                  className="apply-form-field"
+                  style={inputStyleWithFieldError(inputStyle, !!errors.name)}
+                />
+                <FieldInlineError message={errors.name} />
+              </label>
+              <label className="apply-name-field" style={labelBlock}>
+                <span style={labelText}>Preferred name</span>
+                <input
+                  value={form.preferred_name}
+                  onChange={(ev) => setForm((p) => ({ ...p, preferred_name: ev.target.value }))}
+                  placeholder="What should we call you?"
+                  className="apply-form-field"
+                  style={inputStyle}
+                />
+              </label>
+            </div>
             <label style={labelBlock}>
-              <span style={labelText}>Full Name</span>
+              <span style={labelText}>
+                University Email <CoralRequiredStar />
+              </span>
               <input
-                required
-                value={form.name}
-                onChange={(ev) => setForm((p) => ({ ...p, name: ev.target.value }))}
-                placeholder="e.g. Jane Doe"
-                className="apply-form-field"
-                style={inputStyle}
-              />
-            </label>
-            <label style={labelBlock}>
-              <span style={labelText}>University Email (.edu required)</span>
-              <input
-                required
                 type="email"
                 value={form.email}
-                onChange={(ev) => setForm((p) => ({ ...p, email: ev.target.value }))}
+                onChange={(ev) => {
+                  setForm((p) => ({ ...p, email: ev.target.value }));
+                  setErrors((prev) => {
+                    const n = { ...prev };
+                    delete n.email;
+                    return n;
+                  });
+                }}
                 placeholder="you@university.edu"
                 className="apply-form-field"
-                style={inputStyle}
+                style={inputStyleWithFieldError(inputStyle, !!errors.email)}
               />
+              <FieldInlineError message={errors.email} />
             </label>
             <label style={labelBlock}>
-              <span style={labelText}>School</span>
+              <span style={labelText}>
+                School <CoralRequiredStar />
+              </span>
               <input
-                required
                 value={form.school}
-                onChange={(ev) => setForm((p) => ({ ...p, school: ev.target.value }))}
+                onChange={(ev) => {
+                  setForm((p) => ({ ...p, school: ev.target.value }));
+                  setErrors((prev) => {
+                    const n = { ...prev };
+                    delete n.school;
+                    return n;
+                  });
+                }}
                 placeholder="e.g. Boston University"
                 className="apply-form-field"
-                style={inputStyle}
+                style={inputStyleWithFieldError(inputStyle, !!errors.school)}
               />
+              <FieldInlineError message={errors.school} />
             </label>
             <label style={labelBlock}>
-              <span style={labelText}>Major</span>
+              <span style={labelText}>
+                Major <CoralRequiredStar />
+              </span>
               <input
-                required
                 value={form.major}
-                onChange={(ev) => setForm((p) => ({ ...p, major: ev.target.value }))}
+                onChange={(ev) => {
+                  setForm((p) => ({ ...p, major: ev.target.value }));
+                  setErrors((prev) => {
+                    const n = { ...prev };
+                    delete n.major;
+                    return n;
+                  });
+                }}
                 placeholder="e.g. Fine Arts"
                 className="apply-form-field"
-                style={inputStyle}
+                style={inputStyleWithFieldError(inputStyle, !!errors.major)}
               />
+              <FieldInlineError message={errors.major} />
             </label>
             <label style={labelBlock}>
               <span style={labelText}>Art Style</span>
               <select
-                required
                 value={form.medium}
-                onChange={(ev) => setForm((p) => ({ ...p, medium: ev.target.value }))}
+                onChange={(ev) => {
+                  setForm((p) => ({ ...p, medium: ev.target.value }));
+                  setErrors((prev) => {
+                    const n = { ...prev };
+                    delete n.medium;
+                    return n;
+                  });
+                }}
                 className="apply-form-field"
-                style={{ ...inputStyle, cursor: "pointer" }}
+                style={inputStyleWithFieldError(
+                  { ...inputStyle, cursor: "pointer" },
+                  !!errors.medium,
+                )}
               >
                 <option value="" disabled>
                   Select medium
@@ -309,9 +429,10 @@ export default function ApplyPage() {
                   </option>
                 ))}
               </select>
+              <FieldInlineError message={errors.medium} />
             </label>
             <label style={labelBlock}>
-              <span style={labelText}>Portfolio Link (optional)</span>
+              <span style={labelText}>Portfolio Link</span>
               <input
                 type="text"
                 value={form.portfolio_url}
@@ -322,16 +443,28 @@ export default function ApplyPage() {
               />
             </label>
             <label style={labelBlock}>
-              <span style={labelText}>Tell us about your work</span>
+              <span style={labelText}>
+                Tell us about your work <CoralRequiredStar />
+              </span>
               <textarea
-                required
                 rows={5}
                 value={form.bio}
-                onChange={(ev) => setForm((p) => ({ ...p, bio: ev.target.value }))}
+                onChange={(ev) => {
+                  setForm((p) => ({ ...p, bio: ev.target.value }));
+                  setErrors((prev) => {
+                    const n = { ...prev };
+                    delete n.bio;
+                    return n;
+                  });
+                }}
                 placeholder="What inspires you?"
                 className="apply-form-field"
-                style={{ ...inputStyle, resize: "vertical", minHeight: 120 }}
+                style={inputStyleWithFieldError(
+                  { ...inputStyle, resize: "vertical", minHeight: 120 },
+                  !!errors.bio,
+                )}
               />
+              <FieldInlineError message={errors.bio} />
             </label>
             {error ? <p style={{ margin: 0, color: "#E8503A", fontSize: 14 }}>{error}</p> : null}
             {status ? <p style={{ margin: 0, color: "#3BAFD4", fontSize: 14 }}>{status}</p> : null}

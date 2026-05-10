@@ -18,7 +18,12 @@ const centeredLinksStyle: CSSProperties = {
   gap: "28px",
 };
 
-export const SiteHeader = () => (
+type SiteHeaderProps = {
+  /** Hide the primary CTA (e.g. on `/apply` where the page is already the apply flow). */
+  hideApplyCta?: boolean;
+};
+
+export const SiteHeader = ({ hideApplyCta }: SiteHeaderProps = {}) => (
   <header
     style={{
       background: "#12172A",
@@ -107,9 +112,11 @@ export const SiteHeader = () => (
         </Link>
       </div>
 
-      <Link href="/apply" className="cc-header-apply-btn">
-        Apply to Sell
-      </Link>
+      {hideApplyCta ? null : (
+        <Link href="/apply" className="cc-header-apply-btn">
+          Apply to Sell
+        </Link>
+      )}
     </nav>
   </header>
 );

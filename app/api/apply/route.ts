@@ -18,7 +18,7 @@ function escapeHtml(s: string) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, school, major, medium, bio, portfolio_url } = body;
+    const { name, email, school, major, medium, bio, portfolio_url, preferred_name } = body;
 
     if (!name || !email || !school || !major || !medium || !bio) {
       return NextResponse.json(
@@ -37,10 +37,16 @@ export async function POST(request: Request) {
 
     const slug = await uniqueArtistSlug(String(name));
 
+    const preferredNorm =
+      preferred_name != null && String(preferred_name).trim()
+        ? String(preferred_name).trim()
+        : null;
+
     const { data, error } = await supabaseAdmin
       .from("artists")
       .insert({
         name,
+        preferred_name: preferredNorm,
         email: emailNorm,
         school,
         major,
@@ -96,6 +102,9 @@ export async function POST(request: Request) {
         : null;
     const adminHtml = `
 <p><strong>Name:</strong> ${escapeHtml(String(name))}</p>
+<p><strong>Preferred name:</strong> ${
+      preferredNorm ? escapeHtml(preferredNorm) : "Not provided"
+    }</p>
 <p><strong>Email:</strong> ${escapeHtml(emailNorm)}</p>
 <p><strong>School:</strong> ${escapeHtml(String(school))}</p>
 <p><strong>Major:</strong> ${escapeHtml(String(major))}</p>

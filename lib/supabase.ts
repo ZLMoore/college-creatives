@@ -19,6 +19,7 @@ export type OrderStatus = "pending" | "paid" | "fulfilled" | "failed";
 export type Artist = {
   id: string;
   name: string;
+  preferred_name: string | null;
   email: string;
   school: string;
   major: string;
