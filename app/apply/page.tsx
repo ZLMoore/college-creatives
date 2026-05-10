@@ -544,7 +544,7 @@ export default function ApplyPage() {
             <button type="submit" disabled={loading} className="apply-submit-btn">
               {loading ? "Submitting…" : "Submit application"}
             </button>
-            <p style={{ margin: "4px 0 0", fontSize: 12, lineHeight: 1.65, color: "rgba(255,255,255,.45)", textAlign: "left" }}>
+            <p style={{ margin: "4px 0 0", fontSize: 12, lineHeight: 1.65, color: "rgba(255,255,255,.45)", textAlign: "center" }}>
               You will earn 90% of your markup on every sale. We take a 10% commission to keep the platform running.
             </p>
           </form>
