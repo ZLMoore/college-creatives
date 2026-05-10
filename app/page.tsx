@@ -543,7 +543,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--page-bg); color: va
         </section>
       ) : null}
 
-      <div id="faq" style={{ position: "relative", top: "-45px" }} />
+      <div id="faq" style={{ position: "relative", top: "-65px" }} />
       <section className="cc-mission-split">
         <div className="cc-mission-left">
           <div className="cc-mission-left-inner">
