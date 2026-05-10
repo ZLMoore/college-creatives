@@ -40,7 +40,7 @@ export default function RootLayout({
             Questions?{" "}
             <a
               href="mailto:contact@collegecreatives.store"
-              style={{ color: "#E8503A", textDecoration: "none", fontWeight: 600 }}
+              style={{ color: "#3BAFD4", textDecoration: "none", fontWeight: 600 }}
             >
               contact@collegecreatives.store
             </a>

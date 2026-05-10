@@ -201,7 +201,7 @@ export default function ArtistPortalPage() {
               }}
             >
               Not an artist yet?{" "}
-              <Link href="/apply" style={{ color: "#3BAFD4", textDecoration: "none", fontWeight: 600 }}>
+              <Link href="/apply" style={{ color: "#E8503A", textDecoration: "none", fontWeight: 600 }}>
                 Apply to join →
               </Link>
             </p>
