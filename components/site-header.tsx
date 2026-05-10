@@ -113,6 +113,9 @@ export const SiteHeader = ({ hideApplyCta }: SiteHeaderProps = {}) => (
         <Link href="/#gallery" prefetch={false} style={{ ...linkStyle, pointerEvents: "auto" }}>
           Gallery
         </Link>
+        <Link href="/#faq" prefetch={false} style={{ ...linkStyle, pointerEvents: "auto" }}>
+          FAQ
+        </Link>
         <Link href="/for-artists" style={{ ...linkStyle, pointerEvents: "auto" }}>
           Artist Portal
         </Link>
