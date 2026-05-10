@@ -429,7 +429,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--page-bg); color: va
             dare to <span className="hl-coral">create.</span>
           </h1>
           <p className="cc-hero-sub">
-            Every print supports a real college student. Every purchase funds their success.
+            Every print supports a real college student.
+            <br />
+            Every purchase funds their success.
           </p>
           <div className="cc-hero-btns">
             <a href="#gallery" className="cc-btn-amber">
